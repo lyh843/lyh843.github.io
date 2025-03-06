@@ -1,3 +1,4 @@
+//废案
 //新增数据函数
 function addrow()
 {
