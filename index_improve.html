@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>李云浩的个人主页</title>
+    <style>
+        .title{
+            text-align: center;
+        }
+        a{
+            margin-right: 10px;
+        }
+        .todo
+        {
+            display: inline-block;
+            border: 3px solid black;
+        }
+        body
+        {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5)), url('background1.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">网页导览</h1>
+    <h4 style="text-align: center;"><a href="https://github.com/lyh843" style="color: blue;">我的github</a></h4>
+    <div class="todo">
+        <h2 style="text-align: center;">待办事项</h2> 
+        <!--  <button onclick="addrow()">新增数据</button> -->
+        <table border="1" id = 'table'>
+            <tr><th>事项</th><th>要求</th><th>ddl</th><th>提交方式</th><!--<th>操作</th>--></tr>
+            <tr>
+                <td>英语四级听说</td>
+                <td>20日打印准考证</td>
+                <td>5月24日</td>
+                <td>--</td>
+            </tr>
+            <tr>
+                <td>读写pre</td>
+                <td>Delivery Culture vs. Eco-Friendly Goals: Can Laziness Be Green?</td>
+                <td>5月29日</td>
+                <td>--</td>
+            </tr>
+            </tr>
+                <td>跨学科信使：一项人工智能在模拟人的认知特征上的研究进展</td>
+                <td>Word文档，中文，字数1000+（同时提交主要参考文献原文）</td>
+                <td>6月15日</td>
+                <td><p>助教李虹宛:<b>1172355352@qq.com</b></p></td>
+                <!-- <td><button onclick="editrow(this)">编辑</button><button onclick="deleterow(this)">删除</button></td> -->
+            </tr>
+            <tr>
+                <td>阅读书籍《人机对齐》写1篇读书报告</td>
+                <td>评分标准：独立思考+结合课堂知识；2000字中文，Word文档</td>
+                <td>6月15日</td>
+                <td>助教霍莉媛：<b>hly2020201086@163.com</b></td>
+                <!-- <td><button onclick="editrow(this)">编辑</button><button onclick="deleterow(this)">删除</button></td> -->
+            </tr>
+        </table>
+        <!-- <script src="./js/table.js"></script> -->
+    </div>
+    
+    <h2>添加待办事项</h2>
+    <input type="text" id="task" placeholder="事项">
+    <input type="text" id="requirement" placeholder="要求">
+    <input type="text" id="deadline" placeholder="DDL">
+    <input type="text" id="method" placeholder="提交方式">
+    <button onclick="addTodo()">添加事项</button>
+
+
+    <h2>南大网站</h2>
+    <a href="https://www.nju.edu.cn/" target="_blank">南大官网</a>
+    <a href="https://ehall.nju.edu.cn/" target="_blank">南大办事服务大厅</a>
+    <a href="https://p.nju.edu.cn/" target="_blank">南京大学wifi</a>
+    <a href="https://mail.nju.edu.cn/" target="_blank">南京大学邮箱</a>
+    <a href="http://elite.nju.edu.cn/jiaowu/login.do" target="_blank">南京大学教务系统</a>
+    <a href="https://teaching.applysquare.com/" target="_blank">教学立方</a>
+    <a href="https://box.nju.edu.cn/" target="_blank">南大云盘box</a>
+    <a href="https://jw.nju.edu.cn/" target="_blank">南大本科生院教学信息网</a>
+    <a href="https://www.icourse163.org/" target="_blank">中国大学MOOC</a>
+    <a href="https://ndwy.nju.edu.cn/dztml/" target="_blank">南大五育</a>
+    <a href="https://study.nju.edu.cn/" target="_blank">南大SPOC</a>
+    <a href="https://chat.nju.edu.cn/" target="_blank">南大deepseek</a>
+    <a href="https://youth.nju.edu.cn/tw/" target="_blank">南大第二课堂</a>
+    <a href="https://tex.nju.edu.cn/zh/login/" target="_blank">南大LaTex</a>
+    <a href="https://lib.nju.edu.cn/" target="_blank">南大图书馆</a>
+    <a href="http://elite.nju.edu.cn/exchangesystem" target="_blank">查排名网站1</a>
+    <a href="http://elite.nju.edu.cn/exchangesystem/index/create?pid=380" target="_blank">查排名网站2</a>
+    <a href="https://zhtj.youth.cn/zhtj/" target="_blank">智慧团建</a>
+    <a href=""></a>
+    <h2>课程网站</h2>
+    <a href="https://yangyibiao.github.io/" target="_blank">程序设计</a>
+    <a href="https://cslab-cms.nju.edu.cn/" target="_blank">高级程序设计</a>
+    <a href="http://zhuhao.cc/course" target = "_blank">数字系统设计基础</a>
+    <a href="https://oj.cpl.icu/" target="_blank">OJ</a>
+    <a href="https://njusecourse.feishu.cn/wiki/A1HzwviAgiFnQwkfRUWcVjqunLf" target="_blank">南大C语言飞书</a>
+    <a href="https://circuitverse.org/">在线数字逻辑电路设计</a>
+    <h2>编程网站</h2>
+    <a href="https://ref.cpl.icu/" target="_blank">C语言手册</a>
+    <a href="https://leetcode.cn/" target="_blank">力扣</a>
+    <a href="http://cpp.sh/" target="_blank">cpp在线编译</a>
+    <h2>工具</h2>
+    <a href="https://chat.deepseek.com/" target="_blank">deepseek</a>
+    <a href="https://github.com/" target="_blank">github</a>
+    <a href="https://chatgpt.com/" target="_blank">chatgpt</a>
+    <a href="https://www.doubao.com/" target="_blank">豆包</a>
+    <a href="http://doc.ranran520.icu/" target="_blank">在线markdown</a>
+    <a href="https://www.youdao.com/" target="_blank">有道词典</a>
+    <a href="https://juejin.cn/" target="_blank">稀土掘金</a>
+    <a href="https://stackoverflow.com/" target="_blank">stack overflow</a>
+    <a href="https://consensus.app/" target="_blank">consensus</a>
+    <a href="https://www.cnki.net/" target="_blank">中国知网</a>
+    <a href="https://ieeexplore.ieee.org/Xplore/home.jsp" target="_blank">IEEE</a>
+    <a href="https://0223.ppg02-mqelltoq.top/" target="_blank">魔法</a>
+    <a href="https://lmarena.ai/">ai竞技场</a>
+    <h2>常用网站</h2>
+    <a href="https://www.bilibili.com/" target="_blank">B站</a>
+    <a href="https://www.baidu.com/" target="_blank">百度</a>
+    <a href="https://www.bing.com/" target="_blank">bing</a>
+
+    <h2>添加自定义链接</h2>
+    <input type="text" id="linkText" placeholder="显示文本">
+    <input type="text" id="linkUrl" placeholder="链接地址">
+    <button onclick="addLink()">添加链接</button>
+
+    <div id="customLinks"></div>
+
+</body>
+</html>
