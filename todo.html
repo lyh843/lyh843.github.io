@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>待办事项清单</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        input, select, button {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 5px 10px;
+            margin-right: 5px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .edit-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>📝 待办事项清单</h1>
+
+    <form id="todoForm">
+        <input type="text" id="item" placeholder="事项" required>
+        <input type="text" id="requirement" placeholder="要求">
+        <input type="date" id="ddl">
+        <input type="text" id="submission" placeholder="提交方式">
+        <button type="submit">添加任务</button>
+    </form>
+
+    <table id="todoTable">
+        <thead>
+            <tr>
+                <th>事项</th>
+                <th>要求</th>
+                <th>DDL</th>
+                <th>提交方式</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody id="todoList">
+            <!-- 动态生成 -->
+        </tbody>
+    </table>
+
+    <div id="emptyState" class="empty-state">
+        暂无待办事项，请添加新任务。
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('todoForm');
+        const todoList = document.getElementById('todoList');
+        const emptyState = document.getElementById('emptyState');
+
+        let todos = JSON.parse(localStorage.getItem('todos')) || [];
+        let editingIndex = -1;
+
+        function renderTodos() {
+            todoList.innerHTML = '';
+            if (todos.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            emptyState.style.display = 'none';
+
+            todos.forEach((todo, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${todo.item}</td>
+                    <td>${todo.requirement}</td>
+                    <td>${todo.ddl}</td>
+                    <td>${todo.submission}</td>
+                    <td>
+                        <button class="edit-btn" onclick="editTodo(${index})">修改</button>
+                        <button class="delete-btn" onclick="deleteTodo(${index})">删除</button>
+                    </td>
+                `;
+                todoList.appendChild(row);
+            });
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const item = document.getElementById('item').value;
+            const requirement = document.getElementById('requirement').value;
+            const ddl = document.getElementById('ddl').value;
+            const submission = document.getElementById('submission').value;
+
+            if (editingIndex >= 0) {
+                todos[editingIndex] = { item, requirement, ddl, submission };
+                editingIndex = -1;
+                form.querySelector('button').textContent = '添加任务';
+            } else {
+                todos.push({ item, requirement, ddl, submission });
+            }
+
+            localStorage.setItem('todos', JSON.stringify(todos));
+            form.reset();
+            renderTodos();
+        });
+
+        window.editTodo = (index) => {
+            const todo = todos[index];
+            document.getElementById('item').value = todo.item;
+            document.getElementById('requirement').value = todo.requirement;
+            document.getElementById('ddl').value = todo.ddl;
+            document.getElementById('submission').value = todo.submission;
+
+            editingIndex = index;
+            form.querySelector('button').textContent = '更新任务';
+        };
+
+        window.deleteTodo = (index) => {
+            todos.splice(index, 1);
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+        };
+
+        renderTodos();
+    });
+</script>
+
+</body>
+</html>
