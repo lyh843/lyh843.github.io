@@ -1,116 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="李云浩的个人主页 - 导航页">
+    <meta name="author" content="李云浩">
+    <meta name="theme-color" content="#0078D4">
     <title>李云浩的个人主页</title>
-    <style>
-        .title {
-            text-align: center;
-        }
-
-        a {
-            margin-right: 10px;
-        }
-
-        .todo {
-            display: inline-block;
-            border: 3px solid black;
-        }
-
-        body {
-            background-image: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5)), url('background1.png');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="prefetch" href="https://lyh843.github.io/todo">
+    <link rel="prefetch" href="https://lyh843.github.io/nju">
+    <link rel="prefetch" href="https://lyh843.github.io/preClass">
+    <link rel="prefetch" href="https://lyh843.github.io/tools">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <h1 class="title">网页导览</h1>
-    <h3 style="text-align: center;"><a href="https://github.com/lyh843" 
-        style="color: blue;" target="_blank">我的github</a>, <a href="http://4.189.252.43" 
-        style="color: blue;" target="_blank"">我的博客</a>，<a href="https://lyh843.github.io/todo" 
-        style="color: blue" target="_blank">todo_list</a></h3>
-    <h3 style="text-align: center;"><a href="https://lyh843.github.io/nju" 
-        style="color: blue;" target="_blank">南大相关网站</a>, <a href="https://lyh843.github.io/preClass" 
-        style="color: blue;" target="_blank"">所有课程</a>，<a href="https://lyh843.github.io/tools" 
-        tyle="color: blue" target="_blank">所有工具</a></h3>
-    
-    <div style="display:flex;justify-content:center;margin-top:120px;">
-    <form action="https://www.bing.com/search" method="get" 
-            style="display:flex;width:600px;border-radius:40px;
-            box-shadow:0 4px 12px rgba(0,0,0,0.15);overflow:hidden;">
-        
-        <input 
-        type="text"
-        name="q"
-        autofocus
-        placeholder="Search with Bing..."
-        style="
-            flex:1;
-            padding:16px 24px;
-            font-size:18px;
-            border:none;
-            outline:none;
-        "
-        >
+    <header>
+        <h1 class="title">网页导览</h1>
+        <nav class="nav-links" aria-label="主导航">
+            <a href="https://github.com/lyh843" target="_blank" rel="noopener noreferrer">我的github</a>
+            <a href="http://4.189.252.43" target="_blank" rel="noopener noreferrer">我的博客</a>
+            <a href="https://lyh843.github.io/todo" target="_blank" rel="noopener noreferrer">todo_list</a>
+            <a href="https://lyh843.github.io/nju" target="_blank" rel="noopener noreferrer">南大相关网站</a>
+            <a href="https://lyh843.github.io/preClass" target="_blank" rel="noopener noreferrer">所有课程</a>
+            <a href="https://lyh843.github.io/tools" target="_blank" rel="noopener noreferrer">所有工具</a>
+        </nav>
+    </header>
 
-        <button type="submit"
-        style="
-            padding:0 28px;
-            font-size:18px;
-            border:none;
-            background:#0078D4;
-            color:white;
-            cursor:pointer;
-        ">
-        搜索
-        </button>
+    <main>
+        <div class="search-container">
+            <form action="https://www.bing.com/search" method="get" class="search-form" role="search" aria-label="搜索引擎">
+                <input type="text" name="q" autofocus placeholder="Search with Bing..." aria-label="搜索内容">
+                <button type="submit">搜索</button>
+            </form>
+        </div>
 
-    </form>
-    </div>
+        <section class="link-section" aria-labelledby="nju-heading">
+            <h2 id="nju-heading">南大网站</h2>
+            <div class="link-grid">
+                <a href="https://www.nju.edu.cn/" target="_blank" rel="noopener noreferrer">南大官网</a>
+                <a href="https://ehall.nju.edu.cn/" target="_blank" rel="noopener noreferrer">南大办事服务大厅</a>
+                <a href="https://p.nju.edu.cn/" target="_blank" rel="noopener noreferrer">南京大学wifi</a>
+                <a href="https://mail.nju.edu.cn/" target="_blank" rel="noopener noreferrer">南京大学邮箱</a>
+                <a href="http://elite.nju.edu.cn/jiaowu/login.do" target="_blank" rel="noopener noreferrer">南京大学教务系统</a>
+                <a href="https://box.nju.edu.cn/" target="_blank" rel="noopener noreferrer">南大云盘box</a>
+                <a href="https://jw.nju.edu.cn/" target="_blank" rel="noopener noreferrer">南大本科生院教学信息网</a>
+                <a href="https://lib.nju.edu.cn/" target="_blank" rel="noopener noreferrer">南大图书馆</a>
+                <a href="https://test.nju.edu.cn/" target="_blank" rel="noopener noreferrer">南大测速</a>
+                <a href="https://itsc.nju.edu.cn/main.htm" target="_blank" rel="noopener noreferrer">信息化建设管理服务中心</a>
+                <a href="https://table.nju.edu.cn/" target="_blank" rel="noopener noreferrer">南大table</a>
+            </div>
+        </section>
 
-    <h2>南大网站</h2>
-    <a href="https://www.nju.edu.cn/" target="_blank">南大官网</a>
-    <a href="https://ehall.nju.edu.cn/" target="_blank">南大办事服务大厅</a>
-    <a href="https://p.nju.edu.cn/" target="_blank">南京大学wifi</a>
-    <a href="https://mail.nju.edu.cn/" target="_blank">南京大学邮箱</a>
-    <a href="http://elite.nju.edu.cn/jiaowu/login.do" target="_blank">南京大学教务系统</a>
-    <a href="https://box.nju.edu.cn/" target="_blank">南大云盘box</a>
-    <a href="https://jw.nju.edu.cn/" target="_blank">南大本科生院教学信息网</a>
-    <a href="https://lib.nju.edu.cn/" target="_blank">南大图书馆</a>
-    <a href="https://test.nju.edu.cn/" target="blank">南大测速</a>
-    <a href="https://itsc.nju.edu.cn/main.htm" target="_blank">信息化建设管理服务中心</a>
-    <a href="https://table.nju.edu.cn/" target="_blank">南大table</a>
+        <section class="link-section" aria-labelledby="course-heading">
+            <h2 id="course-heading">课程网站</h2>
+            <div class="link-grid">
+                <a href="https://www.ketangpai.cn/#/main/classDetail?courseid=MDAwMDAwMDAwMLOcuZaGqbuxhaVyoQ&courserole=0&submodulename=0" target="_blank" rel="noopener noreferrer">操作系统 课堂派</a>
+                <a href="https://github.com/LAMDASZ-ML/Lab-RoadMap" target="_blank" rel="noopener noreferrer">Lab-RoadMap</a>
+                <a href="https://datawhalechina.github.io/happy-llm/#/" target="_blank" rel="noopener noreferrer">Happy_LLM</a>
+                <a href="https://datawhalechina.github.io/hello-agents/#/" target="_blank" rel="noopener noreferrer">Hello-Agents</a>
+            </div>
+        </section>
 
-    <h2>课程网站</h2>
-    <a href="https://www.ketangpai.cn/#/main/classDetail?courseid=MDAwMDAwMDAwMLOcuZaGqbuxhaVyoQ&courserole=0&submodulename=0" target="_blank">操作系统 课堂派</a>
-    <a href="https://github.com/LAMDASZ-ML/Lab-RoadMap" target="_blank">Lab-RoadMap</a>
-    <a href="https://datawhalechina.github.io/happy-llm/#/" target="_blank">Happy_LLM</a>
-    <a href="https://datawhalechina.github.io/hello-agents/#/" target="_blank">Hello-Agents</a>
-    <h2>AI</h2>
-    <a href="https://chat.deepseek.com/" target="_blank">deepseek</a>
-    <a href="https://github.com/" target="_blank">github</a>
-    <a href="https://chatgpt.com/" target="_blank">chatgpt</a>
-    <a href="https://gemini.google.com/app" target="_blank">gemini</a>
-    <a href="https://www.doubao.com/" target="_blank">豆包</a>
-    <a href="https://sakura-cat1.com/dashboard" target="_blank">sakura cat</a>
+        <section class="link-section" aria-labelledby="ai-heading">
+            <h2 id="ai-heading">AI</h2>
+            <div class="link-grid">
+                <a href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer">deepseek</a>
+                <a href="https://github.com/" target="_blank" rel="noopener noreferrer">github</a>
+                <a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">chatgpt</a>
+                <a href="https://gemini.google.com/app" target="_blank" rel="noopener noreferrer">gemini</a>
+                <a href="https://www.doubao.com/" target="_blank" rel="noopener noreferrer">豆包</a>
+                <a href="https://sakura-cat1.com/dashboard" target="_blank" rel="noopener noreferrer">sakura cat</a>
+            </div>
+        </section>
 
-    <h2>常用网站</h2>
-    <a href="https://www.bilibili.com/" target="_blank">B站</a>
-    <a href="https://music.163.com/" target="_blank"></a>
-    <a href="https://www.baidu.com/" target="_blank">百度</a>
-    <a href="https://www.bing.com/" target="_blank">bing</a>
-    <a href="https://passport2.chaoxing.com/login?fid=&newversion=true&refer=https%3A%2F%2Fi.chaoxing.com"
-        target="_blank">学习通网页版</a>
-    <a href="https://www.paperpass.com/" target="_blank">pass paper</a>
-    <a href="https://leetcode.cn/" target="_blank">LeetCode</a>
-    <a href="https://www.youdao.com/" target="_blank">有道词典</a>
-    <a href="https://ref.cpl.icu/" target="_blank">C语言手册</a>
-
+        <section class="link-section" aria-labelledby="common-heading">
+            <h2 id="common-heading">常用网站</h2>
+            <div class="link-grid">
+                <a href="https://www.bilibili.com/" target="_blank" rel="noopener noreferrer">B站</a>
+                <a href="https://music.163.com/" target="_blank" rel="noopener noreferrer">网易云音乐</a>
+                <a href="https://www.baidu.com/" target="_blank" rel="noopener noreferrer">百度</a>
+                <a href="https://www.bing.com/" target="_blank" rel="noopener noreferrer">bing</a>
+                <a href="https://passport2.chaoxing.com/login?fid=&newversion=true&refer=https%3A%2F%2Fi.chaoxing.com" target="_blank" rel="noopener noreferrer">学习通网页版</a>
+                <a href="https://www.paperpass.com/" target="_blank" rel="noopener noreferrer">pass paper</a>
+                <a href="https://leetcode.cn/" target="_blank" rel="noopener noreferrer">LeetCode</a>
+                <a href="https://www.youdao.com/" target="_blank" rel="noopener noreferrer">有道词典</a>
+                <a href="https://ref.cpl.icu/" target="_blank" rel="noopener noreferrer">C语言手册</a>
+            </div>
+        </section>
+    </main>
 </body>
 
 </html>
