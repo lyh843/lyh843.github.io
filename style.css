@@ -103,6 +103,18 @@ a:hover {
     background: white;
 }
 
+.highlight-link {
+    background: linear-gradient(135deg, #ff6b6b, #ffa500) !important;
+    color: white !important;
+    border-color: #ff6b6b !important;
+    font-weight: 700 !important;
+}
+
+.highlight-link:hover {
+    background: linear-gradient(135deg, #ff5252, #ff8c00) !important;
+    transform: translateY(-3px) scale(1.05);
+}
+
 .search-container {
     display: flex;
     justify-content: center;
