@@ -179,6 +179,47 @@ a:hover {
     transform: scale(1.05);
 }
 
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-width: 600px;
+    margin: 4px auto 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: none;
+    z-index: 1000;
+}
+
+.search-suggestions.active {
+    display: block;
+}
+
+.search-suggestions .suggestion-item {
+    padding: 12px 24px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #333;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.search-suggestions .suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.search-suggestions .suggestion-item:hover,
+.search-suggestions .suggestion-item.selected {
+    background: rgba(0, 120, 212, 0.1);
+    color: var(--primary-color);
+}
+
+.search-container {
+    position: relative;
+}
+
 .link-section {
     background: rgba(255, 255, 255, 0.25);
     padding: 12px 16px;

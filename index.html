@@ -33,16 +33,18 @@
 
     <main>
         <div class="search-container">
-            <form method="get" class="search-form" role="search" aria-label="搜索引擎" target="_blank">
+            <form method="get" class="search-form" role="search" aria-label="搜索引擎" target="_blank" id="search-form">
                 <select id="engine-select" aria-label="选择搜索引擎">
                     <option value="https://www.bing.com/search">Bing</option>
                     <option value="https://www.google.com/search">Google</option>
                     <option value="https://www.baidu.com/s">百度</option>
                     <option value="https://duckduckgo.com/">DuckDuckGo</option>
                 </select>
-                <input type="text" name="q" autofocus placeholder="Search..." aria-label="搜索内容">
+                <input type="text" name="q" autofocus placeholder="Search with Bing..." aria-label="搜索内容" autocomplete="off" id="search-input">
+                
                 <button type="submit">搜索</button>
             </form>
+            <div class="search-suggestions" id="search-suggestions" role="listbox" aria-label="搜索建议"></div>
         </div>
 
         <section class="link-section" aria-labelledby="nju-heading">
@@ -66,6 +68,8 @@
             <h2 id="course-heading">课程网站</h2>
             <div class="link-grid">
                 <a href="http://10.58.102.15:3001/" target="_blank" rel="noopener noreferrer">机器学习导论</a>
+                <a href="http://ws2.nju.edu.cn/kgwiki/doku.php?id=courses:db2" target="_blank" rel="noopener noreferrer">数据库概论</a>
+                <a href="https://cslab-cms.nju.edu.cn/classrooms/iazf4uhj/announcement" target="_blank" rel="noopener noreferrer">数据库cslab</a>
                 <a href="https://daiwz.net/teaching/" target="_blank" rel="noopener noreferrer">数理逻辑</a>
                 <a href="https://www.ketangpai.cn/#/main/classDetail?courseid=MDAwMDAwMDAwMLOcuZaGqbuxhaVyoQ&courserole=0&submodulename=0" target="_blank" rel="noopener noreferrer">操作系统 课堂派</a>
                 <a href="https://nju-3dv.github.io/cm2026/" target="_blank" rel="noopener noreferrer">计算方法</a>
@@ -80,6 +84,7 @@
             <div class="link-grid">
                 <a href="https://chat.deepseek.com/" target="_blank" rel="noopener noreferrer">deepseek</a>
                 <a href="https://github.com/" target="_blank" rel="noopener noreferrer">github</a>
+                <a href="https://huggingface.co/" target="_blank" rel="noopener noreferrer">hugging face</a>
                 <a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">chatgpt</a>
                 <a href="https://gemini.google.com/app" target="_blank" rel="noopener noreferrer">gemini</a>
                 <a href="https://www.doubao.com/" target="_blank" rel="noopener noreferrer">豆包</a>
@@ -122,6 +127,125 @@
                     input.name = 'q';
                 }
             });
+        })();
+    </script>
+    <script>
+        (function() {
+            const searchForm = document.getElementById('search-form');
+            const searchInput = document.getElementById('search-input');
+            const suggestionsContainer = document.getElementById('search-suggestions');
+            let suggestions = [];
+            let selectedIndex = -1;
+            let debounceTimer = null;
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                
+                clearTimeout(debounceTimer);
+                
+                if (!query) {
+                    hideSuggestions();
+                    return;
+                }
+
+                debounceTimer = setTimeout(function() {
+                    fetchSuggestions(query);
+                }, 20);
+            });
+
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (selectedIndex < suggestions.length - 1) {
+                        selectedIndex++;
+                        updateSelected();
+                    }
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (selectedIndex > 0) {
+                        selectedIndex--;
+                        updateSelected();
+                    }
+                } else if (e.key === 'Enter') {
+                    if (selectedIndex >= 0 && suggestions[selectedIndex]) {
+                        e.preventDefault();
+                        searchInput.value = suggestions[selectedIndex];
+                        searchForm.submit();
+                    }
+                } else if (e.key === 'Escape') {
+                    hideSuggestions();
+                }
+            });
+
+            searchForm.addEventListener('submit', function() {
+                hideSuggestions();
+            });
+
+            document.addEventListener('click', function(e) {
+                if (!searchForm.contains(e.target)) {
+                    hideSuggestions();
+                }
+            });
+
+            function fetchSuggestions(query) {
+                const script = document.createElement('script');
+                const callbackName = 'bingCallback_' + Date.now();
+                
+                window[callbackName] = function(data) {
+                    suggestions = data[1] || [];
+                    displaySuggestions(suggestions);
+                    delete window[callbackName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                };
+                
+                script.src = 'https://www.bing.com/osjson.aspx?query=' + encodeURIComponent(query) + '&JsonType=callback&JsonCallback=' + callbackName;
+                script.onerror = function() {
+                    hideSuggestions();
+                    delete window[callbackName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                };
+                document.body.appendChild(script);
+            }
+
+            function displaySuggestions(items) {
+                if (items.length === 0) {
+                    hideSuggestions();
+                    return;
+                }
+
+                suggestionsContainer.innerHTML = '';
+                selectedIndex = -1;
+
+                items.slice(0, 5).forEach(function(item) {
+                    const div = document.createElement('div');
+                    div.className = 'suggestion-item';
+                    div.textContent = item;
+                    div.addEventListener('click', function() {
+                        searchInput.value = item;
+                        searchForm.submit();
+                    });
+                    suggestionsContainer.appendChild(div);
+                });
+
+                suggestionsContainer.classList.add('active');
+            }
+
+            function hideSuggestions() {
+                suggestionsContainer.classList.remove('active');
+                suggestions = [];
+                selectedIndex = -1;
+            }
+
+            function updateSelected() {
+                const items = suggestionsContainer.querySelectorAll('.suggestion-item');
+                items.forEach(function(item, index) {
+                    if (index === selectedIndex) {
+                        item.classList.add('selected');
+                    } else {
+                        item.classList.remove('selected');
+                    }
+                });
+            }
         })();
     </script>
 </body>
