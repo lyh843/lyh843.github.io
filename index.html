@@ -33,8 +33,14 @@
 
     <main>
         <div class="search-container">
-            <form action="https://www.bing.com/search" method="get" class="search-form" role="search" aria-label="搜索引擎" target="_blank">
-                <input type="text" name="q" autofocus placeholder="Search with Bing..." aria-label="搜索内容">
+            <form method="get" class="search-form" role="search" aria-label="搜索引擎" target="_blank">
+                <select id="engine-select" aria-label="选择搜索引擎">
+                    <option value="https://www.bing.com/search">Bing</option>
+                    <option value="https://www.google.com/search">Google</option>
+                    <option value="https://www.baidu.com/s">百度</option>
+                    <option value="https://duckduckgo.com/">DuckDuckGo</option>
+                </select>
+                <input type="text" name="q" autofocus placeholder="Search..." aria-label="搜索内容">
                 <button type="submit">搜索</button>
             </form>
         </div>
@@ -97,6 +103,27 @@
             </div>
         </section>
     </main>
+<script>
+        (function() {
+            var form = document.querySelector('.search-form');
+            var select = document.getElementById('engine-select');
+            var input = form.querySelector('input');
+            var url = localStorage.getItem('searchEngine') || 'https://www.bing.com/search';
+            select.value = url;
+            form.action = url;
+            select.addEventListener('change', function() {
+                form.action = this.value;
+                localStorage.setItem('searchEngine', this.value);
+            });
+            form.addEventListener('submit', function(e) {
+                if (form.action.includes('baidu.com')) {
+                    input.name = 'wd';
+                } else {
+                    input.name = 'q';
+                }
+            });
+        })();
+    </script>
 </body>
 
 </html>
