@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Shanyin Lei's designer portfolio and project archive." />
+    <meta name="author" content="Shanyin Lei" />
+    <meta name="theme-color" content="#f3ece3" />
+    <title>Shanyin Lei | Designer Portfolio</title>
+    <style>
+        :root {
+            --paper: #f5efe6;
+            --ink: #171512;
+            --muted: #6d655b;
+            --line: rgba(23, 21, 18, 0.16);
+            --rose: #e99095;
+            --mint: #a7c9bd;
+            --butter: #ead37b;
+            --cobalt: #3156a3;
+            --clay: #b97a5b;
+            --white: #fffaf2;
+            --shadow: 0 22px 70px rgba(32, 24, 18, 0.14);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            margin: 0;
+            min-width: 0;
+            overflow-x: hidden;
+            background:
+                linear-gradient(90deg, rgba(23, 21, 18, 0.04) 1px, transparent 1px),
+                linear-gradient(rgba(23, 21, 18, 0.035) 1px, transparent 1px),
+                var(--paper);
+            background-size: 44px 44px;
+            color: var(--ink);
+            font-family: "Georgia", "Times New Roman", serif;
+            line-height: 1.55;
+        }
+
+        body::selection {
+            background: var(--butter);
+            color: var(--ink);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        p,
+        h1,
+        h2,
+        h3,
+        a,
+        span,
+        li {
+            overflow-wrap: anywhere;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 1rem;
+            align-items: center;
+            padding: 0.8rem clamp(1rem, 3vw, 2.2rem);
+            border-bottom: 1px solid var(--line);
+            background: rgba(245, 239, 230, 0.86);
+            backdrop-filter: blur(16px);
+        }
+
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 40;
+            width: 100%;
+            height: 3px;
+            transform: scaleX(0);
+            transform-origin: left;
+            background: linear-gradient(90deg, var(--rose), var(--butter), var(--mint), var(--cobalt));
+        }
+
+        .brand {
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.45rem;
+            min-width: 0;
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+            font-size: 0.78rem;
+        }
+
+        .nav-links a,
+        .outline-link {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 0.42rem 0.72rem;
+            background: rgba(255, 250, 242, 0.5);
+            transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+        }
+
+        .nav-links a:hover,
+        .outline-link:hover,
+        .nav-links a.is-active,
+        .nav-links a:focus-visible,
+        .outline-link:focus-visible {
+            border-color: var(--ink);
+            background: var(--white);
+            transform: translateY(-2px);
+            outline: none;
+        }
+
+        .hero {
+            min-height: calc(100vh - 66px);
+            display: grid;
+            grid-template-columns: minmax(0, 0.88fr) minmax(320px, 1.12fr);
+            gap: clamp(1.4rem, 4vw, 4rem);
+            align-items: end;
+            padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 4vw, 4.5rem) 3rem;
+        }
+
+        .hero-copy {
+            align-self: center;
+            min-width: 0;
+        }
+
+        .eyebrow {
+            margin: 0 0 1rem;
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin: 0;
+            font-weight: 500;
+            line-height: 0.98;
+        }
+
+        h1 {
+            max-width: 10ch;
+            font-size: clamp(4.5rem, 15vw, 12.5rem);
+        }
+
+        .hero-copy p {
+            max-width: 36rem;
+            margin: 1.2rem 0 0;
+            color: var(--muted);
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+            font-size: clamp(1rem, 1.4vw, 1.2rem);
+        }
+
+        .hero-media {
+            position: relative;
+            min-width: 0;
+            min-height: 68vh;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .hero-media img {
+            width: 100%;
+            height: 100%;
+            min-height: 68vh;
+            object-fit: cover;
+        }
+
+        .hero-caption {
+            position: absolute;
+            right: 1rem;
+            bottom: 1rem;
+            max-width: 22rem;
+            padding: 0.75rem 0.85rem;
+            background: rgba(255, 250, 242, 0.82);
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+            font-size: 0.82rem;
+        }
+
+        main {
+            overflow: hidden;
+        }
+
+        .section {
+            padding: clamp(4rem, 8vw, 7.5rem) clamp(1rem, 4vw, 4.5rem);
+            border-top: 1px solid var(--line);
+        }
+
+        .section-header {
+            display: grid;
+            grid-template-columns: minmax(10rem, 0.34fr) minmax(0, 0.66fr);
+            gap: clamp(1.5rem, 4vw, 4rem);
+            align-items: end;
+            margin-bottom: clamp(2rem, 5vw, 4rem);
+        }
+
+        .section-header > *,
+        .project-feature > *,
+        .detail > *,
+        .magazine-band > *,
+        .work-grid > *,
+        .gallery > * {
+            min-width: 0;
+        }
+
+        .section-number {
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+
+        h2 {
+            font-size: clamp(2.5rem, 7vw, 7.6rem);
+        }
+
+        .section-intro {
+            max-width: 44rem;
+            margin: 1rem 0 0;
+            color: var(--muted);
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+        }
+
+        .project-feature {
+            display: grid;
+            grid-template-columns: minmax(0, 0.9fr) minmax(22rem, 1.1fr);
+            gap: clamp(1rem, 3vw, 2.4rem);
+            align-items: stretch;
+        }
+
+        .project-feature.reverse {
+            grid-template-columns: minmax(22rem, 1.1fr) minmax(0, 0.9fr);
+        }
+
+        .project-feature.reverse .project-text {
+            order: 2;
+        }
+
+        .project-text {
+            display: flex;
+            min-height: 35rem;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: clamp(1.4rem, 3vw, 2.2rem);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 250, 242, 0.56);
+        }
+
+        .project-text h3 {
+            margin-bottom: 1rem;
+            font-size: clamp(2.4rem, 5vw, 5.8rem);
+        }
+
+        .project-text p {
+            max-width: 40rem;
+            color: var(--muted);
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+        }
+
+        .meta-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+        }
+
+        .meta-item {
+            border-top: 1px solid var(--line);
+            padding-top: 0.7rem;
+        }
+
+        .meta-label {
+            display: block;
+            color: var(--muted);
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .meta-value {
+            display: block;
+            margin-top: 0.2rem;
+            font-size: 0.92rem;
+        }
+
+        .detail-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            width: fit-content;
+            margin-top: 1.4rem;
+            border-bottom: 1px solid currentColor;
+            color: var(--ink);
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .detail-link::after {
+            content: "↗";
+        }
+
+        .project-image {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            min-height: 35rem;
+            object-fit: cover;
+        }
+
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
+            gap: 1rem;
+        }
+
+        .work-card {
+            min-height: 24rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1rem;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--white);
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+        }
+
+        .work-card strong {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-size: 1.7rem;
+            line-height: 1;
+        }
+
+        .work-card p {
+            color: var(--muted);
+        }
+
+        .work-card:nth-child(1) {
+            background: #fff5c8;
+        }
+
+        .work-card:nth-child(2) {
+            background: #e9f2ee;
+        }
+
+        .work-card:nth-child(3) {
+            background: #ffe4df;
+        }
+
+        .work-card:nth-child(4) {
+            background: #edf0ff;
+        }
+
+        .work-card:nth-child(5) {
+            background: #fffaf2;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1rem;
+        }
+
+        .gallery figure {
+            margin: 0;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--white);
+        }
+
+        .gallery figure:nth-child(1),
+        .gallery figure:nth-child(4) {
+            grid-column: span 7;
+        }
+
+        .gallery figure:nth-child(2),
+        .gallery figure:nth-child(3) {
+            grid-column: span 5;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 100%;
+            min-height: 26rem;
+            object-fit: cover;
+        }
+
+        .project-image img,
+        .gallery img,
+        .image-strip img,
+        .carousel img,
+        .poster-stack img {
+            cursor: zoom-in;
+        }
+
+        .gallery figcaption {
+            padding: 0.8rem 1rem;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+            font-size: 0.86rem;
+        }
+
+        .detail {
+            display: grid;
+            grid-template-columns: minmax(14rem, 0.32fr) minmax(0, 0.68fr);
+            gap: clamp(1.4rem, 5vw, 4rem);
+            align-items: start;
+        }
+
+        .detail-aside {
+            position: sticky;
+            top: 6rem;
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+        }
+
+        .detail-aside h3 {
+            margin-bottom: 1rem;
+            font-family: "Georgia", "Times New Roman", serif;
+            font-size: clamp(2.2rem, 5vw, 5rem);
+        }
+
+        .credit-list {
+            display: grid;
+            gap: 0.75rem;
+            margin: 1.4rem 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .credit-list li {
+            border-top: 1px solid var(--line);
+            padding-top: 0.75rem;
+            color: var(--muted);
+        }
+
+        .detail-body {
+            display: grid;
+            gap: 1.2rem;
+        }
+
+        .statement {
+            padding: clamp(1.4rem, 3vw, 2.4rem);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 250, 242, 0.72);
+            font-size: clamp(1.35rem, 2.6vw, 2.4rem);
+            line-height: 1.18;
+        }
+
+        .image-strip {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .image-strip img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+        }
+
+        .behind {
+            padding: clamp(1.4rem, 3vw, 2.2rem);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--ink);
+            color: var(--white);
+        }
+
+        .behind-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .behind h3 {
+            font-size: clamp(2rem, 4vw, 4.4rem);
+        }
+
+        .carousel-controls {
+            display: flex;
+            gap: 0.45rem;
+        }
+
+        .carousel-controls button,
+        .list-button,
+        .close-button {
+            width: 2.5rem;
+            height: 2.5rem;
+            border: 1px solid currentColor;
+            border-radius: 999px;
+            background: transparent;
+            color: inherit;
+            cursor: pointer;
+            font: inherit;
+            transition: transform 180ms ease, background 180ms ease;
+        }
+
+        .carousel-controls button:hover,
+        .carousel-controls button:focus-visible,
+        .list-button:hover,
+        .list-button:focus-visible,
+        .close-button:hover,
+        .close-button:focus-visible {
+            background: rgba(255, 255, 255, 0.16);
+            transform: translateY(-2px);
+            outline: none;
+        }
+
+        .carousel {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(min(18rem, 82vw), 42vw);
+            gap: 1rem;
+            overflow-x: auto;
+            overscroll-behavior-inline: contain;
+            scroll-snap-type: x mandatory;
+            scrollbar-color: var(--white) transparent;
+        }
+
+        .carousel figure {
+            scroll-snap-align: start;
+            margin: 0;
+        }
+
+        .carousel img {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .carousel figcaption {
+            margin-top: 0.55rem;
+            color: rgba(255, 250, 242, 0.76);
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+            font-size: 0.86rem;
+        }
+
+        #twb-carousel {
+            grid-auto-columns: minmax(15rem, 32vw);
+        }
+
+        #twb-carousel img {
+            aspect-ratio: 4 / 3;
+        }
+
+        .magazine-band {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.72fr);
+            gap: 1rem;
+            align-items: stretch;
+        }
+
+        .magazine-copy {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 28rem;
+            padding: clamp(1.4rem, 3vw, 2.2rem);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: #edf0ff;
+        }
+
+        .magazine-copy h3 {
+            font-size: clamp(2.2rem, 5vw, 5.4rem);
+        }
+
+        .magazine-copy p {
+            max-width: 42rem;
+            color: var(--muted);
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+        }
+
+        .poster-stack {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1rem;
+        }
+
+        .poster-stack img {
+            width: 100%;
+            height: 100%;
+            min-height: 28rem;
+            object-fit: cover;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+        }
+
+        .works-dock {
+            position: fixed;
+            right: max(0.75rem, env(safe-area-inset-right));
+            bottom: 1rem;
+            z-index: 30;
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 60;
+            display: grid;
+            place-items: center;
+            padding: clamp(1rem, 3vw, 2rem);
+            background: rgba(23, 21, 18, 0.86);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 180ms ease;
+        }
+
+        .lightbox.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lightbox img {
+            max-width: min(94vw, 1500px);
+            max-height: 82vh;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            object-fit: contain;
+        }
+
+        .lightbox-caption {
+            max-width: min(94vw, 60rem);
+            margin-top: 0.8rem;
+            color: var(--white);
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+            text-align: center;
+        }
+
+        .lightbox button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 2.8rem;
+            height: 2.8rem;
+            border: 1px solid rgba(255, 250, 242, 0.6);
+            border-radius: 999px;
+            background: transparent;
+            color: var(--white);
+            cursor: pointer;
+            font-size: 1.4rem;
+        }
+
+        .list-button {
+            width: auto;
+            min-width: 9.8rem;
+            padding: 0 1rem;
+            background: var(--ink);
+            color: var(--white);
+            box-shadow: var(--shadow);
+        }
+
+        .works-panel {
+            position: absolute;
+            right: 0;
+            bottom: 3.4rem;
+            width: min(24rem, calc(100vw - 2rem));
+            max-height: min(36rem, calc(100dvh - 7rem));
+            overflow: auto;
+            padding: 1rem;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 250, 242, 0.96);
+            box-shadow: var(--shadow);
+            transform: translateY(0.6rem);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .works-dock.is-open .works-panel {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .panel-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .panel-top strong {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-size: 1.6rem;
+            line-height: 1;
+        }
+
+        .close-button {
+            color: var(--ink);
+        }
+
+        .timeline-year {
+            display: grid;
+            grid-template-columns: 4rem 1fr;
+            gap: 1rem;
+            padding: 0.95rem 0;
+            border-top: 1px solid var(--line);
+        }
+
+        .timeline-year h3 {
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--cobalt);
+        }
+
+        .timeline-year ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .timeline-year li + li {
+            margin-top: 0.45rem;
+        }
+
+        .footer {
+            padding: 3rem clamp(1rem, 4vw, 4.5rem) 7rem;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+        }
+
+        @media (max-width: 980px) {
+            .site-header {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                justify-content: flex-start;
+                overflow: visible;
+                flex-wrap: wrap;
+                padding-bottom: 0.2rem;
+            }
+
+            .nav-links a {
+                flex: 0 1 auto;
+            }
+
+            .hero,
+            .project-feature,
+            .project-feature.reverse,
+            .section-header,
+            .detail,
+            .magazine-band {
+                grid-template-columns: 1fr;
+            }
+
+            .project-feature.reverse .project-text {
+                order: 0;
+            }
+
+            .hero {
+                min-height: auto;
+                align-items: start;
+            }
+
+            .hero-media,
+            .hero-media img,
+            .project-image img,
+            .project-text {
+                min-height: auto;
+            }
+
+            .project-image img {
+                aspect-ratio: 16 / 11;
+            }
+
+            .gallery figure:nth-child(n) {
+                grid-column: span 12;
+            }
+
+            .gallery img {
+                min-height: 0;
+                aspect-ratio: 16 / 11;
+            }
+
+            .detail-aside {
+                position: static;
+            }
+
+            .carousel {
+                grid-auto-columns: minmax(16rem, 78vw);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .site-header {
+                gap: 0.65rem;
+                padding: 0.7rem 0.85rem;
+            }
+
+            .brand {
+                font-size: 0.8rem;
+            }
+
+            h1 {
+                max-width: 100%;
+                font-size: clamp(3.25rem, 17vw, 5.4rem);
+            }
+
+            h2 {
+                font-size: clamp(2.2rem, 13vw, 4.1rem);
+            }
+
+            .section {
+                padding: 3.25rem 0.85rem;
+            }
+
+            .hero {
+                gap: 1rem;
+                padding: 2.2rem 0.85rem 2.6rem;
+            }
+
+            .hero-media img {
+                min-height: 0;
+                aspect-ratio: 4 / 5;
+            }
+
+            .hero-caption {
+                position: static;
+                max-width: none;
+                padding-right: 4.5rem;
+                border-width: 1px 0 0;
+                border-radius: 0;
+                background: var(--white);
+            }
+
+            .project-text,
+            .magazine-copy,
+            .behind,
+            .statement {
+                padding: 1rem;
+            }
+
+            .project-text h3,
+            .magazine-copy h3,
+            .detail-aside h3 {
+                font-size: clamp(2rem, 12vw, 3.5rem);
+            }
+
+            .meta-grid,
+            .work-grid,
+            .image-strip,
+            .poster-stack {
+                grid-template-columns: 1fr;
+            }
+
+            .work-card {
+                min-height: 15rem;
+            }
+
+            .project-image img,
+            .poster-stack img {
+                min-height: 0;
+                aspect-ratio: 4 / 5;
+            }
+
+            .image-strip img {
+                aspect-ratio: 16 / 11;
+            }
+
+            .statement {
+                font-size: clamp(1.15rem, 7vw, 1.8rem);
+            }
+
+            .behind-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .carousel {
+                grid-auto-columns: minmax(14rem, calc(100vw - 3.1rem));
+            }
+
+            #twb-carousel {
+                grid-auto-columns: minmax(13rem, calc(100vw - 4.2rem));
+            }
+
+            .list-button {
+                width: 3.2rem;
+                min-width: 0;
+                height: 3.2rem;
+                padding: 0.35rem;
+                border-radius: 50%;
+                font-size: 0.68rem;
+                line-height: 1.05;
+            }
+
+            .works-dock {
+                right: 0.75rem;
+                bottom: max(0.75rem, env(safe-area-inset-bottom));
+            }
+
+            .works-panel {
+                right: -0.15rem;
+                bottom: 3.8rem;
+                width: min(21rem, calc(100vw - 1.5rem));
+                max-height: calc(100dvh - 5.4rem);
+                padding: 0.85rem;
+            }
+
+            .timeline-year {
+                grid-template-columns: 3.2rem 1fr;
+                gap: 0.7rem;
+            }
+
+            .lightbox {
+                padding: 0.75rem;
+            }
+
+            .lightbox img {
+                max-height: 74dvh;
+            }
+
+            .lightbox-caption {
+                font-size: 0.82rem;
+            }
+        }
+
+        @media (max-width: 390px) {
+            .nav-links {
+                font-size: 0.72rem;
+            }
+
+            .nav-links a {
+                padding: 0.36rem 0.58rem;
+            }
+
+            .carousel-controls button,
+            .close-button {
+                width: 2.25rem;
+                height: 2.25rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <header class="site-header">
+        <a class="brand" href="#top" aria-label="Back to top">Shanyin Lei</a>
+        <nav class="nav-links" aria-label="Portfolio category navigation">
+            <a href="#publication">Publication</a>
+            <a href="#exhibition">Exhibition & Poster</a>
+            <a href="#brand">Brand</a>
+            <a href="#experiment">Experiments & Fun</a>
+            <a href="#multimedia">Multimedia</a>
+            <a href="#details">Project Details</a>
+        </nav>
+    </header>
+
+    <main id="top">
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-copy">
+                <p class="eyebrow">Spatial design / Art direction / Publication</p>
+                <h1 id="hero-title">Shanyin Lei</h1>
+                <p>
+                    Design begins with the body, memory and relationships. This page gathers her recent work around
+                    belonging, comfort, space and narrative: furniture you can sit with, rooms you can enter, and
+                    publication experiments that hold a group's voices together.
+                </p>
+            </div>
+            <figure class="hero-media">
+                <img src="source/project_2/1.png" alt="Soft multi-sensory spatial rendering from The Comfort Lab" />
+                <figcaption class="hero-caption">
+                    The Comfort Lab, 2025. A body-led comfort space with tactile carpets, yoga-inspired seats and soft
+                    sensory cues.
+                </figcaption>
+            </figure>
+        </section>
+
+        <section class="section" id="publication" aria-labelledby="publication-title">
+            <div class="section-header">
+                <span class="section-number">01 / Category</span>
+                <div>
+                    <h2 id="publication-title">Publication Design</h2>
+                    <p class="section-intro">
+                        This section draws from the magazine project inside The Comfort Lab PDF. It explores everyday
+                        objects, hidden narratives and non-linear storytelling, treating the magazine as a vessel for
+                        different voices.
+                    </p>
+                </div>
+            </div>
+            <div class="magazine-band">
+                <article class="magazine-copy">
+                    <div>
+                        <p class="eyebrow">Magazine / Group work</p>
+                        <h3>Carry On</h3>
+                    </div>
+                    <p>
+                        Shanyin worked with the layout team, contributing visual research and page compositions. The
+                        project uses Ursula K. Le Guin's "carrier bag" metaphor to connect objects, rooms, small
+                        gestures and side narratives into one publication.
+                    </p>
+                </article>
+                <div class="poster-stack">
+                    <img src="source/project_2/d0869a818163a9fcf6b457d797a83f7e.PNG" alt="Carry On magazine layout and page visuals" />
+                    <img src="source/project_2/eb209013e28f852a9d80ba89aff79cd8.PNG" alt="Carry On magazine final page presentation" />
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="exhibition" aria-labelledby="exhibition-title">
+            <div class="section-header">
+                <span class="section-number">02 / Category</span>
+                <div>
+                    <h2 id="exhibition-title">Exhibition Design & Poster</h2>
+                    <p class="section-intro">
+                        Exhibition here is not only display. It places people inside spatial relationships: a
+                        cross-cultural community space for international students, and a multi-sensory lab for bodily
+                        comfort.
+                    </p>
+                </div>
+            </div>
+            <article class="project-feature">
+                <div class="project-text">
+                    <div>
+                        <p class="eyebrow">Spatial proposal / 2025</p>
+                        <h3>Together We Belong</h3>
+                        <p>
+                            Responding to the "Where people meet" brief, this project proposes a sustainable and
+                            movable exchange space for international students, immigrants and local communities in
+                            London. Circular outer walls, transparent connections, modular furniture and writable
+                            walls create a gentle sense of belonging.
+                        </p>
+                        <a class="detail-link" href="lsy-together.html">Open full project page</a>
+                    </div>
+                    <div class="meta-grid">
+                        <span class="meta-item"><span class="meta-label">Role</span><span class="meta-value">Concept,
+                                spatial design, research</span></span>
+                        <span class="meta-item"><span class="meta-label">Collaborators</span><span
+                                class="meta-value">Tiffany Pan, Aung Thant Kyaw, Ange Zhang</span></span>
+                    </div>
+                </div>
+                <figure class="project-image">
+                    <img src="source/project_1/3.jpg" alt="Circular community space and furniture rendering from Together We Belong" />
+                </figure>
+            </article>
+        </section>
+
+        <section class="section" id="brand" aria-labelledby="brand-title">
+            <div class="section-header">
+                <span class="section-number">03 / Category</span>
+                <div>
+                    <h2 id="brand-title">Brand</h2>
+                    <p class="section-intro">
+                        Since only a few works have become fully implemented brand systems, this section treats brand
+                        as project identity: clear names, tone, material cues and memorable visual anchors.
+                    </p>
+                </div>
+            </div>
+            <div class="work-grid" aria-label="Brand and project identity list">
+                <article class="work-card">
+                    <span>2025 / Identity</span>
+                    <strong>Together We Belong</strong>
+                    <p>A spatial identity centred on belonging, cross-cultural exchange and shared activities.</p>
+                </article>
+                <article class="work-card">
+                    <span>2025 / Identity</span>
+                    <strong>The Comfort Lab</strong>
+                    <p>Softness, touch, body awareness and care shape the tone of the project.</p>
+                </article>
+                <article class="work-card">
+                    <span>2025 / Poster</span>
+                    <strong>Belonging Poster</strong>
+                    <p>A poster direction developed with Ange Zhang, later reconsidered because the tone did not fit.</p>
+                </article>
+                <article class="work-card">
+                    <span>2025 / Web</span>
+                    <strong>Cargo/Spline Site</strong>
+                    <p>3D models embedded into Cargo3, allowing spatial objects to be clicked and rotated.</p>
+                </article>
+                <article class="work-card">
+                    <span>2024 / Visual research</span>
+                    <strong>Material Boards</strong>
+                    <p>Visual systems extracted from textiles, yoga poses, exhibition visits and furniture experiments.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section" id="experiment" aria-labelledby="experiment-title">
+            <div class="section-header">
+                <span class="section-number">04 / Category</span>
+                <div>
+                    <h2 id="experiment-title">Experiments & Fun</h2>
+                    <p class="section-intro">
+                        This section keeps the playful parts visible: puzzle chairs, yoga-pose seats, tactile carpets,
+                        a ping-pong table and workshops. They are not side notes to the final renderings; they are how
+                        she understands bodies and relationships.
+                    </p>
+                </div>
+            </div>
+            <div class="gallery">
+                <figure>
+                    <img src="source/project_1/5.jpg" alt="Top view of puzzle chairs and transparent ping-pong table in Together We Belong" />
+                    <figcaption>Puzzle chairs can be combined or separated, creating different distances for student interaction.</figcaption>
+                </figure>
+                <figure>
+                    <img src="source/project_1/7.jpg" alt="Modular furniture under soft lighting in Together We Belong" />
+                    <figcaption>Low furniture, soft lighting and wooden flooring work together for accessibility and comfort.</figcaption>
+                </figure>
+                <figure>
+                    <img src="source/project_2/4.png" alt="Yoga-inspired seating and tactile carpet in The Comfort Lab" />
+                    <figcaption>Flex Seat extracts bodily curves from yoga poses, encouraging stretching and pause.</figcaption>
+                </figure>
+                <figure>
+                    <img src="source/project_2/88f2b27ae4bf494534c956295031c436.PNG" alt="Process models and experiments from The Comfort Lab" />
+                    <figcaption>Sense Seat, tactile materials and audio visualisation form a multi-sensory comfort experiment.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="section" id="multimedia" aria-labelledby="multimedia-title">
+            <div class="section-header">
+                <span class="section-number">05 / Category</span>
+                <div>
+                    <h2 id="multimedia-title">Multimedia</h2>
+                    <p class="section-intro">
+                        Her projects often move across media: Blender modelling, Spline interaction, Cargo3 websites,
+                        audio visualisation, projected space and PDF publications. Media is not decoration here; it
+                        helps the audience get closer to the bodily feeling of the work.
+                    </p>
+                </div>
+            </div>
+            <article class="project-feature reverse">
+                <div class="project-text">
+                    <div>
+                        <p class="eyebrow">Interactive space / 2025</p>
+                        <h3>The Comfort Lab</h3>
+                        <p>
+                            A multi-sensory comfort space for sedentary lifestyles, physical pain and mental fatigue.
+                            The project includes Flex Seat, Sense Seat, a bio-tactile carpet, ASMR sound and audio
+                            visualisation across four walls, helping the body regain a sense of being cared for.
+                        </p>
+                        <a class="detail-link" href="lsy-comfort.html">Open full project page</a>
+                    </div>
+                    <div class="meta-grid">
+                        <span class="meta-item"><span class="meta-label">Role</span><span class="meta-value">Art
+                                direction, 3D visualisation, sensory research</span></span>
+                        <span class="meta-item"><span class="meta-label">Methods</span><span
+                                class="meta-value">Blender, Photoshop, physical computing research</span></span>
+                    </div>
+                </div>
+                <figure class="project-image">
+                    <img src="source/project_2/5.png" alt="Full rendering of the multi-sensory space in The Comfort Lab" />
+                </figure>
+            </article>
+        </section>
+
+        <section class="section" id="details" aria-labelledby="details-title">
+            <div class="section-header">
+                <span class="section-number">06 / Detail pages</span>
+                <div>
+                    <h2 id="details-title">Project Details</h2>
+                    <p class="section-intro">
+                        Each project keeps clear credits, context and continuous image sequences. Scroll down for a
+                        detail-page style narrative closer to the original PDFs.
+                    </p>
+                </div>
+            </div>
+
+            <article class="detail" id="together-we-belong" aria-labelledby="twb-title">
+                <aside class="detail-aside">
+                    <p class="eyebrow">Project 01</p>
+                    <h3 id="twb-title">Together We Belong</h3>
+                    <ul class="credit-list">
+                        <li><strong>Designer:</strong> Shanyin Lei</li>
+                        <li><strong>Brief:</strong> Where people meet</li>
+                        <li><strong>Collaborators:</strong> Tiffany Pan, Aung Thant Kyaw, Ange Zhang</li>
+                        <li><strong>Output:</strong> Spatial proposal, furniture system, website prototype</li>
+                    </ul>
+                </aside>
+                <div class="detail-body">
+                    <p class="statement">
+                        A space for international students and immigrants to build cultural resonance: people can cook
+                        together, play cultural games, join language exchanges, show work, and use the walls as notice
+                        boards and message surfaces. Its real purpose is not simply to look beautiful, but to make
+                        people feel less alone.
+                    </p>
+                    <div class="image-strip">
+                        <img src="source/project_1/1.jpg" alt="Transparent ping-pong table and circular seating in Together We Belong" />
+                        <img src="source/project_1/4.jpg" alt="Curved walls and furniture layout in Together We Belong" />
+                        <img src="source/project_1/6.jpg" alt="Spatial details and lighting experiments in Together We Belong" />
+                    </div>
+                    <section class="behind" aria-labelledby="behind-twb-title">
+                        <div class="behind-header">
+                            <h3 id="behind-twb-title">Behind the scene</h3>
+                            <div class="carousel-controls">
+                                <button type="button" data-carousel-prev="twb-carousel" aria-label="Previous Together We Belong process image">←</button>
+                                <button type="button" data-carousel-next="twb-carousel" aria-label="Next Together We Belong process image">→</button>
+                            </div>
+                        </div>
+                        <div class="carousel" id="twb-carousel" tabindex="0" aria-label="Together We Belong horizontal process gallery">
+                            <figure>
+                                <img src="source/project_1/3.jpg" alt="First perspective spatial rendering of Together We Belong" />
+                                <figcaption>The project moved from triangular structures toward an elliptical space to reduce distance and increase enclosure.</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="source/project_1/5.jpg" alt="Modular furniture in a top view of Together We Belong" />
+                                <figcaption>Puzzle chairs, the ping-pong table and curved seating help interaction emerge naturally.</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="source/project_1/7.jpg" alt="Soft lighting and furniture experiments in Together We Belong" />
+                                <figcaption>Lighting, fabrics and low furniture were adjusted toward the feeling of a warmer public living room.</figcaption>
+                            </figure>
+                        </div>
+                    </section>
+                </div>
+            </article>
+
+            <article class="detail" id="comfort-lab" aria-labelledby="comfort-title">
+                <aside class="detail-aside">
+                    <p class="eyebrow">Project 02</p>
+                    <h3 id="comfort-title">The Comfort Lab</h3>
+                    <ul class="credit-list">
+                        <li><strong>Designer:</strong> Shanyin Lei</li>
+                        <li><strong>Theme:</strong> Furniture, space and body</li>
+                        <li><strong>Research:</strong> Pallasmaa, Merleau-Ponty, Ernesto Neto, Martino Gamper</li>
+                        <li><strong>Output:</strong> Multi-sensory space, chairs, tactile carpet, magazine work</li>
+                    </ul>
+                </aside>
+                <div class="detail-body">
+                    <p class="statement">
+                        This project begins with her own spinal discomfort and yoga practice, asking how furniture and
+                        space can guide the body to slow down. A seat becomes more than a support structure; it becomes
+                        a gentle reminder of posture, touch, breath and emotion.
+                    </p>
+                    <div class="image-strip">
+                        <img src="source/project_2/2.png" alt="Soft space and seating rendering angle one from The Comfort Lab" />
+                        <img src="source/project_2/3.png" alt="Soft space and seating rendering angle two from The Comfort Lab" />
+                        <img src="source/project_2/86bc89ad0e36cae5664167f4a638ccec.PNG" alt="Process models and visual experiments from The Comfort Lab" />
+                    </div>
+                    <section class="behind" aria-labelledby="behind-comfort-title">
+                        <div class="behind-header">
+                            <h3 id="behind-comfort-title">Behind the scene</h3>
+                            <div class="carousel-controls">
+                                <button type="button" data-carousel-prev="comfort-carousel" aria-label="Previous The Comfort Lab process image">←</button>
+                                <button type="button" data-carousel-next="comfort-carousel" aria-label="Next The Comfort Lab process image">→</button>
+                            </div>
+                        </div>
+                        <div class="carousel" id="comfort-carousel" tabindex="0" aria-label="The Comfort Lab horizontal process gallery">
+                            <figure>
+                                <img src="source/project_2/bebb1cc2b956fad3bc06711832e8ad58.PNG" alt="Blender development collage from The Comfort Lab" />
+                                <figcaption>Furniture forms were found through body postures, yoga images and soft materials.</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="source/project_2/88f2b27ae4bf494534c956295031c436.PNG" alt="Multi-sensory experiments and model process from The Comfort Lab" />
+                                <figcaption>The tactile carpet, sensor seating and sound visualisation gradually became an enterable lab.</figcaption>
+                            </figure>
+                            <figure>
+                                <img src="source/project_2/1d610f74dfafa0ecf4f23db28c13581a.PNG" alt="Final space from The Comfort Lab shown from another angle" />
+                                <figcaption>The final visuals keep softness without becoming childish, emphasising the feeling of being gently held.</figcaption>
+                            </figure>
+                        </div>
+                    </section>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <aside class="works-dock" aria-label="Works organised by year">
+        <div class="works-panel" id="works-panel">
+            <div class="panel-top">
+                <strong>List of Works</strong>
+                <button class="close-button" type="button" aria-label="Close work list">×</button>
+            </div>
+            <div class="timeline-year">
+                <h3>2025</h3>
+                <ul>
+                    <li><a href="lsy-comfort.html">The Comfort Lab / Multi-sensory furniture and space</a></li>
+                    <li><a href="#publication">Carry On Magazine / Publication design</a></li>
+                    <li><a href="lsy-together.html">Together We Belong / Cross-cultural space</a></li>
+                </ul>
+            </div>
+            <div class="timeline-year">
+                <h3>2024</h3>
+                <ul>
+                    <li><a href="#experiment">Material & texture studies / Tactile research</a></li>
+                    <li><a href="#experiment">Yoga pose chair sketches / Body-led furniture experiments</a></li>
+                </ul>
+            </div>
+            <div class="timeline-year">
+                <h3>2023</h3>
+                <ul>
+                    <li><a href="#brand">Visual identity exercises / Project identity practice</a></li>
+                    <li><a href="#publication">Editorial layout studies / Magazine layout research</a></li>
+                </ul>
+            </div>
+            <div class="timeline-year">
+                <h3>2022</h3>
+                <ul>
+                    <li><a href="#multimedia">Early multimedia experiments / Moving image and interaction</a></li>
+                    <li><a href="#exhibition">Installation research archive / Exhibition research</a></li>
+                </ul>
+            </div>
+        </div>
+        <button class="list-button" type="button" aria-expanded="false" aria-controls="works-panel">List of Works</button>
+    </aside>
+
+    <div class="lightbox" aria-hidden="true" role="dialog" aria-label="Artwork image preview">
+        <button type="button" aria-label="Close image preview">×</button>
+        <figure>
+            <img src="" alt="" />
+            <figcaption class="lightbox-caption"></figcaption>
+        </figure>
+    </div>
+
+    <footer class="footer">
+        <p>
+            Portfolio page built from local source PDFs and image exports. All listed project texts are summarized from
+            Shanyin Lei's project documents.
+        </p>
+    </footer>
+
+    <script>
+        'use strict';
+
+        const dock = document.querySelector('.works-dock');
+        const listButton = document.querySelector('.list-button');
+        const closeButton = document.querySelector('.close-button');
+        const progress = document.querySelector('.scroll-progress');
+        const navLinks = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+        const sections = navLinks
+            .map((link) => document.querySelector(link.getAttribute('href')))
+            .filter(Boolean);
+        const lightbox = document.querySelector('.lightbox');
+        const lightboxImage = lightbox.querySelector('img');
+        const lightboxCaption = lightbox.querySelector('.lightbox-caption');
+        const lightboxClose = lightbox.querySelector('button');
+
+        const setPanelOpen = (isOpen) => {
+            dock.classList.toggle('is-open', isOpen);
+            listButton.setAttribute('aria-expanded', String(isOpen));
+        };
+
+        listButton.addEventListener('click', () => {
+            setPanelOpen(!dock.classList.contains('is-open'));
+        });
+
+        closeButton.addEventListener('click', () => {
+            setPanelOpen(false);
+        });
+
+        document.querySelectorAll('.works-panel a').forEach((link) => {
+            link.addEventListener('click', () => {
+                setPanelOpen(false);
+            });
+        });
+
+        document.querySelectorAll('[data-carousel-prev], [data-carousel-next]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const carouselId = button.dataset.carouselPrev || button.dataset.carouselNext;
+                const carousel = document.getElementById(carouselId);
+                const direction = button.dataset.carouselPrev ? -1 : 1;
+                carousel.scrollBy({
+                    left: direction * carousel.clientWidth * 0.82,
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        const updateProgress = () => {
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const ratio = maxScroll > 0 ? window.scrollY / maxScroll : 0;
+            progress.style.transform = `scaleX(${Math.min(1, Math.max(0, ratio))})`;
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) {
+                    return;
+                }
+
+                navLinks.forEach((link) => {
+                    link.classList.toggle('is-active', link.getAttribute('href') === `#${entry.target.id}`);
+                });
+            });
+        }, {
+            rootMargin: '-38% 0px -55% 0px',
+            threshold: 0
+        });
+
+        sections.forEach((section) => observer.observe(section));
+        window.addEventListener('scroll', updateProgress, { passive: true });
+        updateProgress();
+
+        const openLightbox = (image) => {
+            lightboxImage.src = image.currentSrc || image.src;
+            lightboxImage.alt = image.alt;
+            lightboxCaption.textContent = image.closest('figure')?.querySelector('figcaption')?.textContent || image.alt;
+            lightbox.classList.add('is-open');
+            lightbox.setAttribute('aria-hidden', 'false');
+        };
+
+        const closeLightbox = () => {
+            lightbox.classList.remove('is-open');
+            lightbox.setAttribute('aria-hidden', 'true');
+        };
+
+        document.querySelectorAll('.project-image img, .gallery img, .image-strip img, .carousel img, .poster-stack img')
+            .forEach((image) => {
+                image.addEventListener('click', () => openLightbox(image));
+            });
+
+        lightbox.addEventListener('click', (event) => {
+            if (event.target === lightbox || event.target === lightboxClose) {
+                closeLightbox();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeLightbox();
+                setPanelOpen(false);
+            }
+        });
+    </script>
+</body>
+
+</html>

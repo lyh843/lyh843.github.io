@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="The Comfort Lab project detail page by Shanyin Lei." />
+    <meta name="author" content="Shanyin Lei" />
+    <meta name="theme-color" content="#f5efe6" />
+    <title>The Comfort Lab | Shanyin Lei</title>
+    <style>
+        :root {
+            --paper: #f5efe6;
+            --ink: #171512;
+            --muted: #6d655b;
+            --line: rgba(23, 21, 18, 0.16);
+            --white: #fffaf2;
+            --rose: #e99095;
+            --mint: #a7c9bd;
+            --yellow: #ead37b;
+            --shadow: 0 22px 70px rgba(32, 24, 18, 0.14);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            margin: 0;
+            min-width: 0;
+            overflow-x: hidden;
+            background:
+                linear-gradient(90deg, rgba(23, 21, 18, 0.04) 1px, transparent 1px),
+                linear-gradient(rgba(23, 21, 18, 0.035) 1px, transparent 1px),
+                var(--paper);
+            background-size: 44px 44px;
+            color: var(--ink);
+            font-family: Georgia, "Times New Roman", serif;
+            line-height: 1.55;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        img {
+            display: block;
+            max-width: 100%;
+        }
+
+        p,
+        h1,
+        h2,
+        h3,
+        a,
+        dd,
+        dt,
+        figcaption {
+            overflow-wrap: anywhere;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            align-items: center;
+            padding: 0.85rem clamp(1rem, 4vw, 3rem);
+            border-bottom: 1px solid var(--line);
+            background: rgba(245, 239, 230, 0.88);
+            backdrop-filter: blur(16px);
+            font-family: "Trebuchet MS", Verdana, sans-serif;
+        }
+
+        .topbar nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: flex-end;
+            min-width: 0;
+        }
+
+        .pill {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 0.42rem 0.72rem;
+            background: rgba(255, 250, 242, 0.62);
+        }
+
+        .hero {
+            min-height: calc(100vh - 62px);
+            display: grid;
+            grid-template-columns: minmax(0, 0.78fr) minmax(320px, 1.22fr);
+            gap: clamp(1.2rem, 4vw, 4rem);
+            align-items: end;
+            padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 4vw, 4.5rem) 2rem;
+        }
+
+        .eyebrow {
+            margin: 0 0 1rem;
+            font-family: "Trebuchet MS", Verdana, sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin: 0;
+            font-weight: 500;
+            line-height: 0.98;
+        }
+
+        h1 {
+            max-width: 10ch;
+            font-size: clamp(4rem, 12vw, 10rem);
+        }
+
+        h2 {
+            font-size: clamp(2.4rem, 6vw, 6rem);
+        }
+
+        h3 {
+            font-size: clamp(1.8rem, 3vw, 3.2rem);
+        }
+
+        p,
+        li {
+            color: var(--muted);
+            font-family: "Trebuchet MS", Verdana, sans-serif;
+        }
+
+        .hero-text p {
+            max-width: 38rem;
+            font-size: clamp(1rem, 1.3vw, 1.18rem);
+        }
+
+        .hero-image {
+            overflow: hidden;
+            min-width: 0;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+
+        .hero-image img {
+            width: 100%;
+            min-height: 72vh;
+            object-fit: cover;
+        }
+
+        .section {
+            padding: clamp(4rem, 8vw, 7rem) clamp(1rem, 4vw, 4.5rem);
+            border-top: 1px solid var(--line);
+        }
+
+        .hero > *,
+        .intro-grid > *,
+        .sense-grid > *,
+        .gallery > *,
+        .sense-cards > * {
+            min-width: 0;
+        }
+
+        .intro-grid,
+        .sense-grid {
+            display: grid;
+            grid-template-columns: minmax(14rem, 0.34fr) minmax(0, 0.66fr);
+            gap: clamp(1.4rem, 5vw, 4rem);
+        }
+
+        .credit-box {
+            position: sticky;
+            top: 5.6rem;
+            align-self: start;
+            padding: 1rem;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 250, 242, 0.72);
+            font-family: "Trebuchet MS", Verdana, sans-serif;
+        }
+
+        .credit-box dl {
+            display: grid;
+            gap: 0.8rem;
+            margin: 1rem 0 0;
+        }
+
+        .credit-box dt {
+            color: var(--ink);
+            font-size: 0.74rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .credit-box dd {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .statement {
+            padding: clamp(1.5rem, 3vw, 2.6rem);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--white);
+            font-size: clamp(1.35rem, 2.5vw, 2.35rem);
+            line-height: 1.18;
+        }
+
+        .sense-cards {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .sense-cards article {
+            min-height: 14rem;
+            padding: 1rem;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--white);
+        }
+
+        .sense-cards article:nth-child(1) {
+            background: #ffe4df;
+        }
+
+        .sense-cards article:nth-child(2) {
+            background: #e9f2ee;
+        }
+
+        .sense-cards article:nth-child(3) {
+            background: #fff5c8;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1rem;
+        }
+
+        figure {
+            margin: 0;
+        }
+
+        .gallery figure {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--white);
+        }
+
+        .gallery figure:nth-child(1),
+        .gallery figure:nth-child(6) {
+            grid-column: span 8;
+        }
+
+        .gallery figure:nth-child(2),
+        .gallery figure:nth-child(3),
+        .gallery figure:nth-child(4),
+        .gallery figure:nth-child(5) {
+            grid-column: span 4;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 100%;
+            min-height: 26rem;
+            object-fit: cover;
+            cursor: zoom-in;
+        }
+
+        figcaption {
+            padding: 0.8rem 1rem;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font-family: "Trebuchet MS", Verdana, sans-serif;
+            font-size: 0.86rem;
+        }
+
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-family: "Trebuchet MS", Verdana, sans-serif;
+        }
+
+        .filter-bar button.is-active {
+            background: var(--ink);
+            color: var(--white);
+        }
+
+        button {
+            border: 1px solid currentColor;
+            border-radius: 999px;
+            padding: 0.5rem 0.8rem;
+            background: transparent;
+            color: inherit;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .bts {
+            padding: clamp(1.5rem, 3vw, 2.6rem);
+            border-radius: 8px;
+            background: var(--ink);
+            color: var(--white);
+        }
+
+        .bts p {
+            color: rgba(255, 250, 242, 0.76);
+        }
+
+        .carousel {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(min(18rem, 82vw), 42vw);
+            gap: 1rem;
+            overflow-x: auto;
+            overscroll-behavior-inline: contain;
+            scroll-snap-type: x mandatory;
+        }
+
+        .carousel figure {
+            scroll-snap-align: start;
+        }
+
+        .carousel img {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            object-fit: cover;
+            border-radius: 6px;
+            cursor: zoom-in;
+        }
+
+        .controls {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: grid;
+            place-items: center;
+            padding: 1rem;
+            background: rgba(23, 21, 18, 0.88);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 180ms ease;
+        }
+
+        .lightbox.is-open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .lightbox img {
+            max-width: 94vw;
+            max-height: 84vh;
+            border-radius: 8px;
+            object-fit: contain;
+        }
+
+        .footer {
+            padding: 3rem clamp(1rem, 4vw, 4.5rem);
+            border-top: 1px solid var(--line);
+        }
+
+        @media (max-width: 900px) {
+            .topbar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .topbar nav {
+                width: 100%;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                overflow: visible;
+                padding-bottom: 0.2rem;
+            }
+
+            .pill {
+                flex: 0 1 auto;
+            }
+
+            .hero,
+            .intro-grid,
+            .sense-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                min-height: auto;
+                padding-top: 3rem;
+            }
+
+            .hero-image img {
+                min-height: 0;
+                aspect-ratio: 4 / 5;
+            }
+
+            .credit-box {
+                position: static;
+            }
+
+            .sense-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery figure:nth-child(n) {
+                grid-column: span 12;
+            }
+
+            .gallery img {
+                min-height: 0;
+                aspect-ratio: 16 / 11;
+            }
+
+            .carousel {
+                grid-auto-columns: minmax(14rem, calc(100vw - 2rem));
+            }
+        }
+
+        @media (max-width: 560px) {
+            .topbar,
+            .section,
+            .hero {
+                padding-left: 0.85rem;
+                padding-right: 0.85rem;
+            }
+
+            h1 {
+                max-width: 100%;
+                font-size: clamp(3.1rem, 16vw, 5.4rem);
+            }
+
+            h2 {
+                font-size: clamp(2.15rem, 12vw, 4rem);
+            }
+
+            .credit-box,
+            .statement,
+            .bts {
+                padding: 1rem;
+            }
+
+            .filter-bar {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 0.25rem;
+                scrollbar-width: thin;
+            }
+
+            .filter-bar button {
+                flex: 0 0 auto;
+            }
+
+            .lightbox img {
+                max-height: 76dvh;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <a class="pill" href="lsy.html">← Portfolio</a>
+        <nav aria-label="Project detail navigation">
+            <a class="pill" href="#overview">Overview</a>
+            <a class="pill" href="#outcome">Outcome</a>
+            <a class="pill" href="#behind">Behind</a>
+            <a class="pill" href="lsy-together.html">Previous project</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-text">
+                <p class="eyebrow">Art direction / Furniture / Body / 2025</p>
+                <h1>The Comfort Lab</h1>
+                <p>
+                    An experimental space that cares for the body through furniture, sound, touch and image. Beginning
+                    with the physical pressure of sedentary life, it organises yoga poses, multi-sensory materials and
+                    interactive seating into a field the body can understand.
+                </p>
+            </div>
+            <figure class="hero-image">
+                <img src="source/project_2/1.png" alt="Final rendering of the soft tactile space in The Comfort Lab" />
+            </figure>
+        </section>
+
+        <section class="section intro-grid" id="overview">
+            <aside class="credit-box">
+                <p class="eyebrow">Credits</p>
+                <dl>
+                    <dt>Designer</dt>
+                    <dd>Shanyin Lei</dd>
+                    <dt>Project scope</dt>
+                    <dd>Furniture, spatial environment, sensory interaction, publication reflection</dd>
+                    <dt>Tools</dt>
+                    <dd>Blender, Photoshop, physical computing research, layout studies</dd>
+                    <dt>PDF source</dt>
+                    <dd>source/project_2/art direction.pdf</dd>
+                </dl>
+            </aside>
+            <div>
+                <p class="statement">
+                    The research question asks how multi-sensory interaction in furniture and spatial environments can
+                    help people affected by sedentary lifestyles, bodily discomfort and mental fatigue feel comfort and
+                    relaxation. The project translates bodily experience into Flex Seat, Sense Seat, a tactile carpet
+                    and audio visualisation.
+                </p>
+                <div class="sense-cards">
+                    <article>
+                        <h3>Touch</h3>
+                        <p>The bio-tactile carpet uses varied textures to simulate a gently enveloping bodily sensation.</p>
+                    </article>
+                    <article>
+                        <h3>Sound</h3>
+                        <p>ASMR and sound visualisation create a slower, lower-stimulus immersive environment.</p>
+                    </article>
+                    <article>
+                        <h3>Posture</h3>
+                        <p>Flex Seat extracts forms from yoga poses, guiding the body toward stretching and pause.</p>
+                    </article>
+                    <article>
+                        <h3>Feedback</h3>
+                        <p>Sense Seat imagines pressure sensors that gently respond to posture and muscular contact.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="outcome">
+            <p class="eyebrow">Filtered view</p>
+            <h2>Outcome gallery</h2>
+            <div class="filter-bar" aria-label="Artwork image filters">
+                <button type="button" class="is-active" data-filter="all">All</button>
+                <button type="button" data-filter="space">Space</button>
+                <button type="button" data-filter="process">Process</button>
+                <button type="button" data-filter="publication">Publication</button>
+            </div>
+            <div class="gallery">
+                <figure data-category="space">
+                    <img src="source/project_2/5.png" alt="Full top-view rendering of The Comfort Lab" />
+                    <figcaption>The full space is composed of soft carpets, posture-led seats and an enterable visual path.</figcaption>
+                </figure>
+                <figure data-category="space">
+                    <img src="source/project_2/2.png" alt="Seats and tactile carpet in The Comfort Lab" />
+                    <figcaption>The seats feel like paused body postures and touchable sculptures.</figcaption>
+                </figure>
+                <figure data-category="space">
+                    <img src="source/project_2/3.png" alt="Soft carpet close rendering from The Comfort Lab" />
+                    <figcaption>Pale pink, soft yellow and mint keep the space light while maintaining direction.</figcaption>
+                </figure>
+                <figure data-category="process">
+                    <img src="source/project_2/86bc89ad0e36cae5664167f4a638ccec.PNG" alt="Process models and experiments from The Comfort Lab" />
+                    <figcaption>The process images record the translation from posture and material into space.</figcaption>
+                </figure>
+                <figure data-category="process">
+                    <img src="source/project_2/bebb1cc2b956fad3bc06711832e8ad58.PNG" alt="Blender process collage from The Comfort Lab" />
+                    <figcaption>The models repeatedly test curve, thickness and modes of contact with the body.</figcaption>
+                </figure>
+                <figure data-category="publication">
+                    <img src="source/project_2/eb209013e28f852a9d80ba89aff79cd8.PNG" alt="Final Carry On magazine page included in The Comfort Lab PDF" />
+                    <figcaption>The same PDF also includes a team magazine project reflecting on collaboration and narrative structure.</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section class="section sense-grid">
+            <div>
+                <p class="eyebrow">Research anchors</p>
+                <h2>The body is not a viewer. It is the entrance.</h2>
+            </div>
+            <div>
+                <p>
+                    The project references Juhani Pallasmaa's writing on multi-sensory architecture, Merleau-Ponty's
+                    theory of embodied perception, and works by Ernesto Neto and Martino Gamper. Together, they point
+                    toward one idea: space is understood not only through the eyes, but also through skin, sound,
+                    posture, memory and action.
+                </p>
+                <p>
+                    Her own yoga practice and spinal discomfort push comfort beyond "looking soft" toward a state where
+                    the body truly knows how to pause.
+                </p>
+            </div>
+        </section>
+
+        <section class="section" id="behind">
+            <div class="bts">
+                <p class="eyebrow">Behind the scene</p>
+                <h2>Softness also takes a lot of testing</h2>
+                <p>This horizontal section gathers process fragments from modelling, materials, publication work and final renderings. Click any image to enlarge it.</p>
+                <div class="controls">
+                    <button type="button" data-prev="bts-carousel">←</button>
+                    <button type="button" data-next="bts-carousel">→</button>
+                </div>
+                <div class="carousel" id="bts-carousel">
+                    <figure>
+                        <img src="source/project_2/88f2b27ae4bf494534c956295031c436.PNG" alt="Multi-sensory experiment process from The Comfort Lab" />
+                        <figcaption>Touch, audio, visuals and seating were tested together instead of becoming four isolated elements.</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="source/project_2/1d610f74dfafa0ecf4f23db28c13581a.PNG" alt="Final space angle from The Comfort Lab" />
+                        <figcaption>The final space keeps a sense of play while leaning toward quietness, care and bodily comfort.</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="source/project_2/d0869a818163a9fcf6b457d797a83f7e.PNG" alt="Carry On magazine layout process" />
+                        <figcaption>The publication work shows her thinking around collaboration, layout rhythm and narrative containers.</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="lightbox" aria-hidden="true" role="dialog" aria-label="Image preview">
+        <img src="" alt="" />
+    </div>
+
+    <footer class="footer">
+        <a class="pill" href="lsy.html">Back to portfolio home</a>
+    </footer>
+
+    <script>
+        'use strict';
+
+        const filterButtons = document.querySelectorAll('[data-filter]');
+        const galleryItems = document.querySelectorAll('.gallery figure');
+
+        filterButtons.forEach((button) => {
+            button.addEventListener('click', () => {
+                const filter = button.dataset.filter;
+                filterButtons.forEach((item) => item.classList.toggle('is-active', item === button));
+                galleryItems.forEach((item) => {
+                    item.hidden = filter !== 'all' && item.dataset.category !== filter;
+                });
+            });
+        });
+
+        document.querySelectorAll('[data-prev], [data-next]').forEach((button) => {
+            button.addEventListener('click', () => {
+                const id = button.dataset.prev || button.dataset.next;
+                const carousel = document.getElementById(id);
+                const direction = button.dataset.prev ? -1 : 1;
+                carousel.scrollBy({ left: direction * carousel.clientWidth * 0.82, behavior: 'smooth' });
+            });
+        });
+
+        const lightbox = document.querySelector('.lightbox');
+        const lightboxImage = lightbox.querySelector('img');
+
+        document.querySelectorAll('.gallery img, .carousel img, .hero-image img').forEach((image) => {
+            image.addEventListener('click', () => {
+                lightboxImage.src = image.src;
+                lightboxImage.alt = image.alt;
+                lightbox.classList.add('is-open');
+                lightbox.setAttribute('aria-hidden', 'false');
+            });
+        });
+
+        lightbox.addEventListener('click', () => {
+            lightbox.classList.remove('is-open');
+            lightbox.setAttribute('aria-hidden', 'true');
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                lightbox.classList.remove('is-open');
+                lightbox.setAttribute('aria-hidden', 'true');
+            }
+        });
+    </script>
+</body>
+
+</html>
