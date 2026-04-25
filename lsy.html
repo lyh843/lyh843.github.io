@@ -136,7 +136,7 @@
         }
 
         .hero {
-            min-height: calc(100vh - 66px);
+            min-height: min(760px, calc(100vh - 66px));
             display: grid;
             grid-template-columns: minmax(0, 0.88fr) minmax(320px, 1.12fr);
             gap: clamp(1.4rem, 4vw, 4rem);
@@ -206,6 +206,121 @@
             border: 1px solid var(--line);
             border-radius: 6px;
             font-family: "Trebuchet MS", "Verdana", sans-serif;
+            font-size: 0.82rem;
+        }
+
+        .work-board {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 1rem;
+            padding: 0 clamp(1rem, 4vw, 4.5rem) clamp(4rem, 7vw, 6rem);
+        }
+
+        .board-intro {
+            grid-column: span 4;
+            align-self: end;
+            min-width: 0;
+            padding: clamp(1.2rem, 2vw, 1.6rem);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: rgba(255, 250, 242, 0.72);
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+        }
+
+        .board-intro p {
+            margin-bottom: 0;
+            color: var(--muted);
+        }
+
+        .draggable-work {
+            position: relative;
+            grid-column: span 4;
+            display: block;
+            min-width: 0;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: var(--white);
+            box-shadow: 0 12px 36px rgba(32, 24, 18, 0.1);
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+            transition: box-shadow 180ms ease, transform 180ms ease, border-color 180ms ease;
+        }
+
+        .draggable-work:hover,
+        .draggable-work:focus-visible {
+            border-color: var(--ink);
+            box-shadow: var(--shadow);
+            outline: none;
+        }
+
+        .draggable-work.is-dragging {
+            z-index: 25;
+            cursor: grabbing;
+            box-shadow: var(--shadow);
+            transition: none;
+        }
+
+        .draggable-work:nth-child(2) {
+            transform: rotate(-1.4deg);
+        }
+
+        .draggable-work:nth-child(3) {
+            transform: translateY(2.2rem) rotate(1.2deg);
+        }
+
+        .draggable-work:nth-child(4) {
+            transform: translateY(-1rem) rotate(-0.8deg);
+        }
+
+        .draggable-work:nth-child(5) {
+            grid-column: span 3;
+            transform: translateY(0.8rem) rotate(1.6deg);
+        }
+
+        .draggable-work:nth-child(6) {
+            grid-column: span 5;
+            transform: rotate(-0.6deg);
+        }
+
+        .draggable-work:nth-child(7) {
+            grid-column: span 4;
+            transform: translateY(1.2rem) rotate(0.7deg);
+        }
+
+        .draggable-work.is-dragging,
+        .draggable-work.was-dragged {
+            transform: translate(var(--drag-x, 0px), var(--drag-y, 0px)) rotate(var(--drag-rotate, 0deg));
+        }
+
+        .draggable-work img {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            pointer-events: none;
+        }
+
+        .draggable-work.work-tall img {
+            aspect-ratio: 3 / 4;
+        }
+
+        .work-label {
+            display: grid;
+            gap: 0.25rem;
+            padding: 0.85rem;
+            border-top: 1px solid var(--line);
+            font-family: "Trebuchet MS", "Verdana", sans-serif;
+        }
+
+        .work-label strong {
+            font-family: "Georgia", "Times New Roman", serif;
+            font-size: clamp(1.25rem, 2.2vw, 2rem);
+            line-height: 1;
+        }
+
+        .work-label span {
+            color: var(--muted);
             font-size: 0.82rem;
         }
 
@@ -809,6 +924,16 @@
                 align-items: start;
             }
 
+            .work-board {
+                grid-template-columns: repeat(6, 1fr);
+            }
+
+            .board-intro,
+            .draggable-work,
+            .draggable-work:nth-child(n) {
+                grid-column: span 3;
+            }
+
             .hero-media,
             .hero-media img,
             .project-image img,
@@ -863,12 +988,12 @@
 
             .hero {
                 gap: 1rem;
-                padding: 2.2rem 0.85rem 2.6rem;
+                padding: 2.2rem 0.85rem 2rem;
             }
 
             .hero-media img {
                 min-height: 0;
-                aspect-ratio: 4 / 5;
+                aspect-ratio: 16 / 10;
             }
 
             .hero-caption {
@@ -878,6 +1003,24 @@
                 border-width: 1px 0 0;
                 border-radius: 0;
                 background: var(--white);
+            }
+
+            .work-board {
+                grid-template-columns: 1fr;
+                gap: 0.85rem;
+                padding: 0 0.85rem 3rem;
+            }
+
+            .board-intro,
+            .draggable-work,
+            .draggable-work:nth-child(n) {
+                grid-column: 1;
+                transform: none;
+            }
+
+            .draggable-work img,
+            .draggable-work.work-tall img {
+                aspect-ratio: 16 / 11;
             }
 
             .project-text,
@@ -1024,6 +1167,65 @@
             </figure>
         </section>
 
+        <section class="work-board" aria-label="Draggable work collection">
+            <article class="board-intro">
+                <p class="eyebrow">Drag / Click / Scroll</p>
+                <h2>All works in one place</h2>
+                <p>
+                    This homepage works like a loose studio wall. Drag the JPG and PNG works around, click any image to
+                    open its project detail page, or keep scrolling to explore by category.
+                </p>
+            </article>
+
+            <a class="draggable-work" href="lsy-together.html" data-work-card aria-label="Open Together We Belong detail page">
+                <img src="source/project_1/1.jpg" alt="Together We Belong transparent ping-pong table and seating" />
+                <span class="work-label">
+                    <strong>Together We Belong</strong>
+                    <span>Exhibition design & spatial proposal / 2025</span>
+                </span>
+            </a>
+
+            <a class="draggable-work work-tall" href="lsy-comfort.html" data-work-card aria-label="Open The Comfort Lab detail page">
+                <img src="source/project_2/1.png" alt="The Comfort Lab tactile spatial rendering" />
+                <span class="work-label">
+                    <strong>The Comfort Lab</strong>
+                    <span>Multimedia, furniture and sensory space / 2025</span>
+                </span>
+            </a>
+
+            <a class="draggable-work" href="lsy-comfort.html#outcome" data-work-card aria-label="Open Carry On magazine detail section">
+                <img src="source/project_2/eb209013e28f852a9d80ba89aff79cd8.PNG" alt="Carry On magazine final spread" />
+                <span class="work-label">
+                    <strong>Carry On Magazine</strong>
+                    <span>Publication design / 2025</span>
+                </span>
+            </a>
+
+            <a class="draggable-work" href="lsy-together.html#process" data-work-card aria-label="Open material and process detail section">
+                <img src="source/project_1/5.jpg" alt="Puzzle chairs and modular play furniture" />
+                <span class="work-label">
+                    <strong>Puzzle Furniture</strong>
+                    <span>Experiments & fun / 2025</span>
+                </span>
+            </a>
+
+            <a class="draggable-work" href="lsy-comfort.html#overview" data-work-card aria-label="Open Flex Seat and Sense Seat detail section">
+                <img src="source/project_2/4.png" alt="Yoga-pose seats and tactile carpet" />
+                <span class="work-label">
+                    <strong>Flex / Sense Seat</strong>
+                    <span>Brand identity and object system / 2025</span>
+                </span>
+            </a>
+
+            <a class="draggable-work work-tall" href="lsy-comfort.html#behind" data-work-card aria-label="Open multimedia process detail section">
+                <img src="source/project_2/88f2b27ae4bf494534c956295031c436.PNG" alt="The Comfort Lab process collage" />
+                <span class="work-label">
+                    <strong>Audio-visual Lab</strong>
+                    <span>Multimedia process / 2025</span>
+                </span>
+            </a>
+        </section>
+
         <section class="section" id="publication" aria-labelledby="publication-title">
             <div class="section-header">
                 <span class="section-number">01 / Category</span>
@@ -1147,19 +1349,27 @@
             </div>
             <div class="gallery">
                 <figure>
-                    <img src="source/project_1/5.jpg" alt="Top view of puzzle chairs and transparent ping-pong table in Together We Belong" />
+                    <a href="lsy-together.html#gallery">
+                        <img src="source/project_1/5.jpg" alt="Top view of puzzle chairs and transparent ping-pong table in Together We Belong" />
+                    </a>
                     <figcaption>Puzzle chairs can be combined or separated, creating different distances for student interaction.</figcaption>
                 </figure>
                 <figure>
-                    <img src="source/project_1/7.jpg" alt="Modular furniture under soft lighting in Together We Belong" />
+                    <a href="lsy-together.html#gallery">
+                        <img src="source/project_1/7.jpg" alt="Modular furniture under soft lighting in Together We Belong" />
+                    </a>
                     <figcaption>Low furniture, soft lighting and wooden flooring work together for accessibility and comfort.</figcaption>
                 </figure>
                 <figure>
-                    <img src="source/project_2/4.png" alt="Yoga-inspired seating and tactile carpet in The Comfort Lab" />
+                    <a href="lsy-comfort.html#outcome">
+                        <img src="source/project_2/4.png" alt="Yoga-inspired seating and tactile carpet in The Comfort Lab" />
+                    </a>
                     <figcaption>Flex Seat extracts bodily curves from yoga poses, encouraging stretching and pause.</figcaption>
                 </figure>
                 <figure>
-                    <img src="source/project_2/88f2b27ae4bf494534c956295031c436.PNG" alt="Process models and experiments from The Comfort Lab" />
+                    <a href="lsy-comfort.html#behind">
+                        <img src="source/project_2/88f2b27ae4bf494534c956295031c436.PNG" alt="Process models and experiments from The Comfort Lab" />
+                    </a>
                     <figcaption>Sense Seat, tactile materials and audio visualisation form a multi-sensory comfort experiment.</figcaption>
                 </figure>
             </div>
@@ -1382,6 +1592,7 @@
         const lightboxImage = lightbox.querySelector('img');
         const lightboxCaption = lightbox.querySelector('.lightbox-caption');
         const lightboxClose = lightbox.querySelector('button');
+        const draggableWorks = document.querySelectorAll('[data-work-card]');
 
         const setPanelOpen = (isOpen) => {
             dock.classList.toggle('is-open', isOpen);
@@ -1454,8 +1665,62 @@
 
         document.querySelectorAll('.project-image img, .gallery img, .image-strip img, .carousel img, .poster-stack img')
             .forEach((image) => {
+                if (image.closest('a')) {
+                    return;
+                }
+
                 image.addEventListener('click', () => openLightbox(image));
             });
+
+        draggableWorks.forEach((card, index) => {
+            let startX = 0;
+            let startY = 0;
+            let currentX = 0;
+            let currentY = 0;
+            let hasMoved = false;
+
+            card.style.setProperty('--drag-rotate', `${(index % 2 === 0 ? -0.7 : 0.7)}deg`);
+
+            card.addEventListener('pointerdown', (event) => {
+                if (event.button !== 0) {
+                    return;
+                }
+
+                startX = event.clientX - currentX;
+                startY = event.clientY - currentY;
+                hasMoved = false;
+                card.classList.add('is-dragging');
+                card.setPointerCapture(event.pointerId);
+            });
+
+            card.addEventListener('pointermove', (event) => {
+                if (!card.classList.contains('is-dragging')) {
+                    return;
+                }
+
+                currentX = event.clientX - startX;
+                currentY = event.clientY - startY;
+
+                if (Math.abs(currentX) + Math.abs(currentY) > 8) {
+                    hasMoved = true;
+                }
+
+                card.style.setProperty('--drag-x', `${currentX}px`);
+                card.style.setProperty('--drag-y', `${currentY}px`);
+            });
+
+            card.addEventListener('pointerup', (event) => {
+                card.classList.remove('is-dragging');
+                card.classList.toggle('was-dragged', hasMoved || currentX !== 0 || currentY !== 0);
+                card.releasePointerCapture(event.pointerId);
+            });
+
+            card.addEventListener('click', (event) => {
+                if (hasMoved) {
+                    event.preventDefault();
+                }
+            });
+        });
 
         lightbox.addEventListener('click', (event) => {
             if (event.target === lightbox || event.target === lightboxClose) {
