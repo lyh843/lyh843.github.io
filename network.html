@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="五种经典社区检测算法的原理、公式与 Python 手写实现">
+  <title>社区检测算法：原理、公式与代码</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root {
+      --paper: #f4efe5;
+      --paper-deep: #e8dfcf;
+      --ink: #17201d;
+      --muted: #65706b;
+      --line: rgba(23, 32, 29, 0.16);
+      --forest: #174f3b;
+      --forest-bright: #247557;
+      --coral: #d45b3f;
+      --mustard: #d9a52b;
+      --code: #101b18;
+      --code-ink: #dce9df;
+      --code-muted: #82968b;
+      --white: #fffdf8;
+      --shadow: 0 18px 50px rgba(44, 38, 27, 0.12);
+      --radius: 22px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 10% 5%, rgba(217, 165, 43, 0.18), transparent 28rem),
+        radial-gradient(circle at 92% 82%, rgba(36, 117, 87, 0.14), transparent 32rem),
+        var(--paper);
+      font-family: "Noto Serif SC", "Source Han Serif SC", "STSong", Georgia, serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      content: "";
+      opacity: 0.32;
+      background-image:
+        linear-gradient(rgba(23, 32, 29, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(23, 32, 29, 0.035) 1px, transparent 1px);
+      background-size: 32px 32px;
+      mask-image: linear-gradient(to bottom, black, transparent 80%);
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .shell {
+      width: min(1500px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 18px 0 12px;
+      background: linear-gradient(to bottom, rgba(244, 239, 229, 0.97) 70%, transparent);
+      backdrop-filter: blur(12px);
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      min-width: max-content;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 50%;
+      color: var(--white);
+      background: var(--forest);
+      box-shadow: 0 7px 18px rgba(23, 79, 59, 0.24);
+      font: 700 16px/1 "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    .brand-copy strong,
+    .brand-copy span {
+      display: block;
+    }
+
+    .brand-copy strong {
+      font-size: 16px;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-copy span {
+      margin-top: 2px;
+      color: var(--muted);
+      font: 11px/1.3 "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .page-meter {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font: 600 12px/1 "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    .meter-track {
+      width: 120px;
+      height: 4px;
+      overflow: hidden;
+      border-radius: 10px;
+      background: var(--paper-deep);
+    }
+
+    .meter-fill {
+      width: 20%;
+      height: 100%;
+      border-radius: inherit;
+      background: var(--coral);
+      transition: width 350ms ease;
+    }
+
+    .algorithm-nav {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 14px;
+      padding: 6px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 253, 248, 0.76);
+      box-shadow: 0 8px 24px rgba(44, 38, 27, 0.05);
+    }
+
+    .nav-tab {
+      min-height: 46px;
+      padding: 8px 12px;
+      border: 0;
+      border-radius: 11px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      transition: color 180ms ease, background 180ms ease, transform 180ms ease;
+    }
+
+    .nav-tab:hover {
+      color: var(--forest);
+      transform: translateY(-1px);
+    }
+
+    .nav-tab.active {
+      color: var(--white);
+      background: var(--forest);
+      box-shadow: 0 7px 16px rgba(23, 79, 59, 0.2);
+    }
+
+    .nav-tab .number {
+      margin-right: 7px;
+      opacity: 0.68;
+      font: 700 11px/1 "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    main {
+      padding: 36px 0 24px;
+    }
+
+    .algorithm-page {
+      display: none;
+      animation: page-in 480ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .algorithm-page.active {
+      display: block;
+    }
+
+    @keyframes page-in {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(260px, 0.55fr);
+      gap: 38px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      color: var(--coral);
+      font: 700 12px/1 "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 28px;
+      height: 2px;
+      content: "";
+      background: currentColor;
+    }
+
+    h1 {
+      max-width: 940px;
+      margin: 0;
+      font-size: clamp(38px, 5.3vw, 78px);
+      font-weight: 700;
+      line-height: 0.98;
+      letter-spacing: -0.045em;
+    }
+
+    .hero-description {
+      max-width: 800px;
+      margin: 20px 0 0;
+      color: #46514c;
+      font-size: clamp(16px, 1.3vw, 20px);
+      line-height: 1.85;
+    }
+
+    .hero-index {
+      position: relative;
+      min-height: 150px;
+      overflow: hidden;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-index .big-number {
+      position: absolute;
+      right: 0;
+      bottom: -29px;
+      color: rgba(23, 79, 59, 0.11);
+      font: 800 clamp(110px, 13vw, 180px)/1 "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      letter-spacing: -0.1em;
+    }
+
+    .hero-index dl {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px 18px;
+      margin: 24px 0;
+      font-size: 13px;
+    }
+
+    .hero-index dt {
+      color: var(--muted);
+    }
+
+    .hero-index dd {
+      margin: 0;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.88fr) minmax(500px, 1.12fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .theory-column {
+      display: grid;
+      gap: 18px;
+    }
+
+    .card {
+      position: relative;
+      overflow: hidden;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, 0.82);
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      margin: 0 0 15px;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+
+    .card p {
+      margin: 0;
+      color: #46514c;
+      line-height: 1.85;
+    }
+
+    .formula-card {
+      color: var(--white);
+      border-color: transparent;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(217, 165, 43, 0.2), transparent 12rem),
+        var(--forest);
+    }
+
+    .formula-card h2,
+    .formula-card p {
+      color: inherit;
+    }
+
+    .formula {
+      margin: 20px 0;
+      padding: 18px 12px;
+      overflow-x: auto;
+      border-top: 1px solid rgba(255, 255, 255, 0.17);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.17);
+      font-size: clamp(15px, 1.35vw, 20px);
+      text-align: center;
+    }
+
+    .formula-note {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .formula-note span {
+      padding: 9px 11px;
+      border-radius: 9px;
+      color: rgba(255, 255, 255, 0.78);
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .steps {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: steps;
+    }
+
+    .steps li {
+      position: relative;
+      min-height: 36px;
+      padding: 0 0 17px 48px;
+      color: #46514c;
+      line-height: 1.65;
+      counter-increment: steps;
+    }
+
+    .steps li:last-child {
+      padding-bottom: 0;
+    }
+
+    .steps li::before {
+      position: absolute;
+      top: -3px;
+      left: 0;
+      display: grid;
+      width: 31px;
+      height: 31px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--forest);
+      content: counter(steps, decimal-leading-zero);
+      font: 700 11px/1 "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    .steps li:not(:last-child)::after {
+      position: absolute;
+      top: 30px;
+      bottom: 0;
+      left: 15px;
+      width: 1px;
+      content: "";
+      background: var(--line);
+    }
+
+    .code-card {
+      position: sticky;
+      top: 146px;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--code);
+      box-shadow: 0 25px 60px rgba(16, 27, 24, 0.25);
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--code-muted);
+      font: 12px/1 "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+    }
+
+    .window-dots {
+      display: flex;
+      gap: 7px;
+    }
+
+    .window-dots i {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #d45b3f;
+    }
+
+    .window-dots i:nth-child(2) {
+      background: #d9a52b;
+    }
+
+    .window-dots i:nth-child(3) {
+      background: #4a9a70;
+    }
+
+    .copy-button {
+      padding: 6px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 7px;
+      color: var(--code-muted);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .copy-button:hover {
+      color: var(--code-ink);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    pre {
+      max-height: min(68vh, 760px);
+      margin: 0;
+      padding: 22px;
+      overflow: auto;
+      color: var(--code-ink);
+      tab-size: 4;
+      font: 13px/1.65 "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      scrollbar-color: #345048 transparent;
+      scrollbar-width: thin;
+    }
+
+    code .comment {
+      color: #789184;
+    }
+
+    code .keyword {
+      color: #e79b83;
+    }
+
+    code .function {
+      color: #f1c66a;
+    }
+
+    code .string {
+      color: #8ec7a3;
+    }
+
+    .insight-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      margin-top: 22px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--line);
+    }
+
+    .insight {
+      min-height: 118px;
+      padding: 22px;
+      background: rgba(255, 253, 248, 0.82);
+    }
+
+    .insight span {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--coral);
+      font: 700 10px/1 "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .insight strong {
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .paper-link {
+      text-decoration-color: var(--mustard);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .page-controls {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 20px;
+      margin: 34px 0 8px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+    }
+
+    .page-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      width: max-content;
+      padding: 12px 17px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--ink);
+      background: rgba(255, 253, 248, 0.64);
+      cursor: pointer;
+      transition: transform 180ms ease, background 180ms ease;
+    }
+
+    .page-button:hover:not(:disabled) {
+      background: var(--white);
+      transform: translateY(-2px);
+    }
+
+    .page-button:disabled {
+      opacity: 0.34;
+      cursor: not-allowed;
+    }
+
+    .page-button.next {
+      justify-self: end;
+    }
+
+    .keyboard-tip {
+      color: var(--muted);
+      font: 11px/1 "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
+      text-align: center;
+    }
+
+    kbd {
+      display: inline-grid;
+      min-width: 24px;
+      height: 24px;
+      margin: 0 2px;
+      padding: 0 5px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-bottom-width: 2px;
+      border-radius: 5px;
+      color: var(--ink);
+      background: var(--white);
+      font: inherit;
+    }
+
+    @media (max-width: 1050px) {
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .code-card {
+        position: relative;
+        top: auto;
+      }
+
+      pre {
+        max-height: 650px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        width: min(100% - 24px, 1500px);
+      }
+
+      .site-header {
+        padding-top: 10px;
+      }
+
+      .brand-copy span,
+      .meter-track {
+        display: none;
+      }
+
+      .algorithm-nav {
+        display: flex;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .nav-tab {
+        min-width: max-content;
+      }
+
+      main {
+        padding-top: 22px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 22px;
+      }
+
+      .hero-index {
+        min-height: 110px;
+      }
+
+      .card {
+        padding: 21px;
+      }
+
+      .formula-note,
+      .insight-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .page-controls {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .keyboard-tip {
+        display: none;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .site-header,
+      .page-controls,
+      .copy-button {
+        display: none;
+      }
+
+      .algorithm-page {
+        display: block !important;
+        break-after: page;
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .code-card {
+        position: static;
+        break-inside: avoid;
+      }
+
+      pre {
+        max-height: none;
+        white-space: pre-wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="shell">
+      <div class="header-row">
+        <div class="brand">
+          <div class="brand-mark">G(V,E)</div>
+          <div class="brand-copy">
+            <strong>社区检测算法图鉴</strong>
+            <span>Theory · Formula · Implementation</span>
+          </div>
+        </div>
+        <div class="page-meter" aria-live="polite">
+          <span id="pageCount">01 / 05</span>
+          <div class="meter-track" aria-hidden="true">
+            <div class="meter-fill" id="meterFill"></div>
+          </div>
+        </div>
+      </div>
+      <nav class="algorithm-nav" aria-label="算法页面导航">
+        <button class="nav-tab active" data-page="greedy"><span class="number">01</span>Greedy</button>
+        <button class="nav-tab" data-page="louvain"><span class="number">02</span>Louvain</button>
+        <button class="nav-tab" data-page="label"><span class="number">03</span>Label Propagation</button>
+        <button class="nav-tab" data-page="fluid"><span class="number">04</span>Fluid</button>
+        <button class="nav-tab" data-page="girvan"><span class="number">05</span>Girvan-Newman</button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="algorithm-page active" id="greedy" data-index="0">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Modularity Optimization</div>
+          <h1>Greedy<br>Modularity</h1>
+          <p class="hero-description">
+            从每个节点独立成团开始，每一步都选择能让模块度提升最多的社区对进行合并。
+            这是一个直观的凝聚式过程：先有许多小岛，再逐渐形成大陆。
+          </p>
+        </div>
+        <div class="hero-index">
+          <span class="big-number">01</span>
+          <dl>
+            <dt>策略</dt><dd>自底向上合并</dd>
+            <dt>目标</dt><dd>最大化模块度</dd>
+            <dt>参数</dt><dd>无需预设社区数</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="theory-column">
+          <article class="card">
+            <h2>核心直觉</h2>
+            <p>
+              一个好的社区划分，应当让社区内部实际出现的边，比保持节点度数不变的随机网络中
+              “应该出现”的边更多。模块度正是在比较这两个量。
+            </p>
+          </article>
+          <article class="card formula-card">
+            <h2>模块度公式</h2>
+            <div class="formula">
+              \[
+              Q = \frac{1}{2m}\sum_{i,j}
+              \left(A_{ij}-\frac{k_i k_j}{2m}\right)\delta(c_i,c_j)
+              \]
+            </div>
+            <p>对社区合并进行贪心搜索，每轮保留使 \(\Delta Q\) 最大且为正的操作。</p>
+            <div class="formula-note">
+              <span>\(A_{ij}\)：邻接矩阵元素</span>
+              <span>\(k_i\)：节点 \(i\) 的度</span>
+              <span>\(m\)：网络边数</span>
+              <span>\(\delta\)：同社区指示函数</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2>算法流程</h2>
+            <ol class="steps">
+              <li>每个节点初始化为独立社区。</li>
+              <li>枚举存在连边的候选社区对。</li>
+              <li>试合并并重新计算模块度。</li>
+              <li>接受提升最大的合并，直至无法继续改进。</li>
+            </ol>
+          </article>
+        </div>
+
+        <article class="code-card">
+          <div class="code-header">
+            <div class="window-dots"><i></i><i></i><i></i></div>
+            <span>greedy_modularity.py</span>
+            <button class="copy-button" type="button">复制代码</button>
+          </div>
+          <pre><code><span class="keyword">def</span> <span class="function">greedy_modularity</span>(graph):
+    current_partition = [{node} <span class="keyword">for</span> node <span class="keyword">in</span> graph.nodes()]
+    current_score = modularity(graph, current_partition)
+
+    <span class="keyword">while</span> <span class="keyword">True</span>:
+        community_of = {}
+        <span class="keyword">for</span> idx, community <span class="keyword">in</span> enumerate(current_partition):
+            <span class="keyword">for</span> node <span class="keyword">in</span> community:
+                community_of[node] = idx
+
+        <span class="comment"># 只考虑有边相连的社区对</span>
+        candidate_pairs = set()
+        <span class="keyword">for</span> u, v <span class="keyword">in</span> graph.edges():
+            cu, cv = community_of[u], community_of[v]
+            <span class="keyword">if</span> cu != cv:
+                candidate_pairs.add(tuple(sorted((cu, cv))))
+
+        best_partition = <span class="keyword">None</span>
+        best_score = current_score
+
+        <span class="keyword">for</span> first, second <span class="keyword">in</span> candidate_pairs:
+            merged_partition = []
+            <span class="keyword">for</span> idx, community <span class="keyword">in</span> enumerate(current_partition):
+                <span class="keyword">if</span> idx == first:
+                    merged = current_partition[first] | current_partition[second]
+                    merged_partition.append(set(merged))
+                <span class="keyword">elif</span> idx != second:
+                    merged_partition.append(set(community))
+
+            trial_score = modularity(graph, merged_partition)
+            <span class="keyword">if</span> trial_score > best_score + 1e-12:
+                best_score = trial_score
+                best_partition = merged_partition
+
+        <span class="keyword">if</span> best_partition <span class="keyword">is None</span>:
+            <span class="keyword">break</span>
+
+        current_partition = best_partition
+        current_score = best_score
+
+    <span class="keyword">return</span> normalize_partition(current_partition)</code></pre>
+        </article>
+      </div>
+
+      <div class="insight-strip">
+        <div class="insight"><span>Strength</span><strong>逻辑清晰，适合作为模块度优化基线</strong></div>
+        <div class="insight"><span>Trade-off</span><strong>早期贪心决策无法撤销，可能陷入局部最优</strong></div>
+        <div class="insight"><span>Paper</span><strong><a class="paper-link" href="https://arxiv.org/abs/cond-mat/0408187" target="_blank" rel="noopener">Clauset, Newman &amp; Moore, 2004</a></strong></div>
+      </div>
+    </section>
+
+    <section class="algorithm-page" id="louvain" data-index="1">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Multilevel Optimization</div>
+          <h1>Louvain<br>Method</h1>
+          <p class="hero-description">
+            Louvain 把模块度优化拆成两个交替阶段：节点在局部寻找更合适的社区，
+            随后将整个社区压缩为超节点。图在每一层都变得更小，结构也更清晰。
+          </p>
+        </div>
+        <div class="hero-index">
+          <span class="big-number">02</span>
+          <dl>
+            <dt>策略</dt><dd>局部移动 + 聚合</dd>
+            <dt>目标</dt><dd>多层次模块度优化</dd>
+            <dt>特点</dt><dd>高效、可扩展</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="theory-column">
+          <article class="card">
+            <h2>两阶段循环</h2>
+            <p>
+              第一阶段逐个考察节点，把它移动到能够获得最大正模块度增益的邻居社区；
+              第二阶段把已形成的社区压缩成超节点，并在聚合图上重复同样过程。
+            </p>
+          </article>
+          <article class="card formula-card">
+            <h2>节点移动的模块度增益</h2>
+            <div class="formula">
+              \[
+              \Delta Q =
+              \left[\frac{\Sigma_{in}+2k_{i,in}}{2m}
+              -\left(\frac{\Sigma_{tot}+k_i}{2m}\right)^2\right]
+              -
+              \left[\frac{\Sigma_{in}}{2m}
+              -\left(\frac{\Sigma_{tot}}{2m}\right)^2
+              -\left(\frac{k_i}{2m}\right)^2\right]
+              \]
+            </div>
+            <div class="formula-note">
+              <span>\(\Sigma_{in}\)：社区内部边权</span>
+              <span>\(\Sigma_{tot}\)：社区关联总边权</span>
+              <span>\(k_i\)：节点加权度</span>
+              <span>\(k_{i,in}\)：节点到社区的边权</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2>算法流程</h2>
+            <ol class="steps">
+              <li>每个节点独立成社区。</li>
+              <li>随机遍历节点，尝试移动到邻居社区。</li>
+              <li>保留带来最大正模块度增益的移动。</li>
+              <li>将社区压缩成超节点，进入下一层。</li>
+            </ol>
+          </article>
+        </div>
+
+        <article class="code-card">
+          <div class="code-header">
+            <div class="window-dots"><i></i><i></i><i></i></div>
+            <span>louvain.py · 核心逻辑</span>
+            <button class="copy-button" type="button">复制代码</button>
+          </div>
+          <pre><code><span class="keyword">def</span> <span class="function">louvain_one_level</span>(graph, rng, max_iter=50):
+    labels = {node: idx <span class="keyword">for</span> idx, node <span class="keyword">in</span> enumerate(graph.nodes())}
+    best_score = modularity(graph, label_dict_to_partition(labels))
+    nodes = list(graph.nodes())
+
+    <span class="keyword">for</span> _ <span class="keyword">in</span> range(max_iter):
+        changed = <span class="keyword">False</span>
+        order = nodes[:]
+        rng.shuffle(order)
+
+        <span class="keyword">for</span> node <span class="keyword">in</span> order:
+            current = labels[node]
+            candidates = {labels[n] <span class="keyword">for</span> n <span class="keyword">in</span> graph.neighbors(node)}
+            local_best, local_score = current, best_score
+
+            <span class="keyword">for</span> candidate <span class="keyword">in</span> candidates:
+                trial = dict(labels)
+                trial[node] = candidate
+                score = modularity(graph, label_dict_to_partition(trial))
+                <span class="keyword">if</span> score > local_score + 1e-12:
+                    local_best, local_score = candidate, score
+
+            <span class="keyword">if</span> local_best != current:
+                labels[node] = local_best
+                best_score = local_score
+                changed = <span class="keyword">True</span>
+
+        <span class="keyword">if not</span> changed:
+            <span class="keyword">break</span>
+
+    <span class="keyword">return</span> label_dict_to_partition(labels)
+
+
+<span class="keyword">def</span> <span class="function">louvain</span>(graph, seed=42, max_levels=8):
+    rng = random.Random(seed)
+    current_graph = graph.copy()
+    nx.set_node_attributes(
+        current_graph,
+        {node: {node} <span class="keyword">for</span> node <span class="keyword">in</span> graph.nodes()},
+        <span class="string">'members'</span>,
+    )
+
+    <span class="keyword">for</span> _ <span class="keyword">in</span> range(max_levels):
+        partition = louvain_one_level(current_graph, rng)
+        <span class="keyword">if</span> len(partition) == current_graph.number_of_nodes():
+            <span class="keyword">break</span>
+        current_graph = aggregate_graph(current_graph, partition)
+
+    <span class="keyword">return</span> recover_original_partition(current_graph)</code></pre>
+        </article>
+      </div>
+
+      <div class="insight-strip">
+        <div class="insight"><span>Strength</span><strong>速度快，通常能找到很高的模块度</strong></div>
+        <div class="insight"><span>Trade-off</span><strong>受遍历顺序影响，并存在模块度分辨率限制</strong></div>
+        <div class="insight"><span>Paper</span><strong><a class="paper-link" href="https://arxiv.org/abs/0803.0476" target="_blank" rel="noopener">Blondel et al., 2008</a></strong></div>
+      </div>
+    </section>
+
+    <section class="algorithm-page" id="label" data-index="2">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Local Consensus</div>
+          <h1>Label<br>Propagation</h1>
+          <p class="hero-description">
+            没有全局目标函数，也不需要预设社区数。每个节点只听邻居的意见，
+            采用当前最流行的标签；局部共识不断扩散，最终自然形成社区。
+          </p>
+        </div>
+        <div class="hero-index">
+          <span class="big-number">03</span>
+          <dl>
+            <dt>策略</dt><dd>异步邻居投票</dd>
+            <dt>目标</dt><dd>局部标签一致</dd>
+            <dt>复杂度</dt><dd>接近线性</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="theory-column">
+          <article class="card">
+            <h2>核心直觉</h2>
+            <p>
+              网络中的密集区域拥有更多内部连边，因此某个标签更容易在区域内部反复传播并成为主导；
+              稀疏的社区间连边则不容易改变这种局部共识。
+            </p>
+          </article>
+          <article class="card formula-card">
+            <h2>标签更新规则</h2>
+            <div class="formula">
+              \[
+              c_i(t+1)=\arg\max_{\ell}
+              \sum_{j\in N(i)}\mathbf{1}\!\left(c_j(t)=\ell\right)
+              \]
+            </div>
+            <p>若多个标签获得相同最高票数，则随机选择；异步更新会立即影响同一轮中的后续节点。</p>
+            <div class="formula-note">
+              <span>\(N(i)\)：节点 \(i\) 的邻居</span>
+              <span>\(\ell\)：候选标签</span>
+              <span>\(\mathbf{1}\)：示性函数</span>
+              <span>\(t\)：当前迭代轮次</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2>算法流程</h2>
+            <ol class="steps">
+              <li>给每个节点分配唯一标签。</li>
+              <li>随机打乱节点更新顺序。</li>
+              <li>采用邻居中出现次数最多的标签。</li>
+              <li>重复更新，直到整轮没有标签变化。</li>
+            </ol>
+          </article>
+        </div>
+
+        <article class="code-card">
+          <div class="code-header">
+            <div class="window-dots"><i></i><i></i><i></i></div>
+            <span>label_propagation.py</span>
+            <button class="copy-button" type="button">复制代码</button>
+          </div>
+          <pre><code><span class="keyword">def</span> <span class="function">label_propagation</span>(graph, seed=42, max_iter=200):
+    rng = random.Random(seed)
+    nodes = list(graph.nodes())
+
+    <span class="comment"># 初始时每个节点拥有唯一标签</span>
+    labels = {
+        node: idx
+        <span class="keyword">for</span> idx, node <span class="keyword">in</span> enumerate(nodes)
+    }
+
+    <span class="keyword">for</span> _ <span class="keyword">in</span> range(max_iter):
+        changed = <span class="keyword">False</span>
+        order = nodes[:]
+        rng.shuffle(order)
+
+        <span class="keyword">for</span> node <span class="keyword">in</span> order:
+            neighbor_labels = Counter(
+                labels[neighbor]
+                <span class="keyword">for</span> neighbor <span class="keyword">in</span> graph.neighbors(node)
+            )
+            <span class="keyword">if not</span> neighbor_labels:
+                <span class="keyword">continue</span>
+
+            best_count = max(neighbor_labels.values())
+            best_labels = [
+                label
+                <span class="keyword">for</span> label, count <span class="keyword">in</span> neighbor_labels.items()
+                <span class="keyword">if</span> count == best_count
+            ]
+
+            current = labels[node]
+            <span class="keyword">if</span> current <span class="keyword">in</span> best_labels:
+                next_label = current
+            <span class="keyword">else</span>:
+                next_label = rng.choice(sorted(best_labels))
+
+            <span class="keyword">if</span> next_label != current:
+                labels[node] = next_label
+                changed = <span class="keyword">True</span>
+
+        <span class="keyword">if not</span> changed:
+            <span class="keyword">break</span>
+
+    <span class="keyword">return</span> label_dict_to_partition(labels)</code></pre>
+        </article>
+      </div>
+
+      <div class="insight-strip">
+        <div class="insight"><span>Strength</span><strong>无需目标函数或社区数量，运行成本很低</strong></div>
+        <div class="insight"><span>Trade-off</span><strong>随机性较强，多次运行可能产生不同划分</strong></div>
+        <div class="insight"><span>Paper</span><strong><a class="paper-link" href="https://arxiv.org/abs/0709.2938" target="_blank" rel="noopener">Raghavan, Albert &amp; Kumara, 2007</a></strong></div>
+      </div>
+    </section>
+
+    <section class="algorithm-page" id="fluid" data-index="3">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Density-Constrained Propagation</div>
+          <h1>Fluid<br>Communities</h1>
+          <p class="hero-description">
+            把社区想象成在网络中流动的液体：它们会扩张、收缩并争夺节点。
+            社区越小密度越高，从而获得更强的竞争力，避免被大社区轻易吞没。
+          </p>
+        </div>
+        <div class="hero-index">
+          <span class="big-number">04</span>
+          <dl>
+            <dt>策略</dt><dd>密度加权传播</dd>
+            <dt>输入</dt><dd>预设社区数 k</dd>
+            <dt>约束</dt><dd>社区不消失</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="theory-column">
+          <article class="card">
+            <h2>动态平衡</h2>
+            <p>
+              与普通标签传播不同，Fluid Communities 会用社区规模的倒数作为密度。
+              小社区权重大、大社区权重小，这种负反馈使多个社区可以长期共存。
+            </p>
+          </article>
+          <article class="card formula-card">
+            <h2>密度与节点得分</h2>
+            <div class="formula">
+              \[
+              \rho(c)=\frac{1}{|c|},
+              \qquad
+              S_i(c)=\sum_{j\in\{i\}\cup N(i)}
+              \mathbf{1}(c_j=c)\rho(c)
+              \]
+              \[
+              c_i\leftarrow\arg\max_c S_i(c)
+              \]
+            </div>
+            <div class="formula-note">
+              <span>\(\rho(c)\)：社区密度</span>
+              <span>\(|c|\)：社区节点数</span>
+              <span>\(S_i(c)\)：节点对社区的局部得分</span>
+              <span>\(k\)：预先指定的社区数量</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2>算法流程</h2>
+            <ol class="steps">
+              <li>随机选择 \(k\) 个种子节点建立社区。</li>
+              <li>根据当前规模计算各社区密度。</li>
+              <li>节点选择邻域密度得分最高的社区。</li>
+              <li>保护社区最后一个节点，迭代至稳定。</li>
+            </ol>
+          </article>
+        </div>
+
+        <article class="code-card">
+          <div class="code-header">
+            <div class="window-dots"><i></i><i></i><i></i></div>
+            <span>fluid_communities.py · 核心迭代</span>
+            <button class="copy-button" type="button">复制代码</button>
+          </div>
+          <pre><code><span class="keyword">def</span> <span class="function">fluid_communities</span>(graph, k, seed=42, max_iter=250):
+    <span class="keyword">if not</span> nx.is_connected(graph):
+        <span class="keyword">raise</span> ValueError(<span class="string">'graph must be connected'</span>)
+
+    rng = random.Random(seed)
+    nodes = list(graph.nodes())
+    membership = {node: <span class="keyword">None</span> <span class="keyword">for</span> node <span class="keyword">in</span> nodes}
+
+    <span class="comment"># 仅初始化 k 个种子，其余节点等待社区扩张</span>
+    seed_nodes = rng.sample(nodes, k)
+    <span class="keyword">for</span> idx, node <span class="keyword">in</span> enumerate(seed_nodes):
+        membership[node] = idx
+
+    <span class="keyword">for</span> _ <span class="keyword">in</span> range(max_iter):
+        changed = <span class="keyword">False</span>
+        order = nodes[:]
+        rng.shuffle(order)
+
+        <span class="keyword">for</span> node <span class="keyword">in</span> order:
+            sizes = Counter(
+                c <span class="keyword">for</span> c <span class="keyword">in</span> membership.values()
+                <span class="keyword">if</span> c <span class="keyword">is not None</span>
+            )
+            current = membership[node]
+            protected = (
+                current
+                <span class="keyword">if</span> current <span class="keyword">is not None</span> <span class="keyword">and</span> sizes[current] == 1
+                <span class="keyword">else None</span>
+            )
+
+            density = {c: 1.0 / size <span class="keyword">for</span> c, size <span class="keyword">in</span> sizes.items()}
+            scores = defaultdict(float)
+
+            <span class="keyword">for</span> neighbor <span class="keyword">in</span> [node, *graph.neighbors(node)]:
+                community = membership[neighbor]
+                <span class="keyword">if</span> community <span class="keyword">is not None</span>:
+                    scores[community] += density[community]
+
+            <span class="keyword">if not</span> scores:
+                <span class="keyword">continue</span>
+
+            best = max(scores.values())
+            candidates = [
+                c <span class="keyword">for</span> c, score <span class="keyword">in</span> scores.items()
+                <span class="keyword">if</span> abs(score - best) < 1e-12
+            ]
+            next_community = (
+                current
+                <span class="keyword">if</span> current <span class="keyword">in</span> candidates
+                <span class="keyword">else</span> rng.choice(sorted(candidates))
+            )
+
+            <span class="keyword">if</span> next_community != current <span class="keyword">and</span> protected <span class="keyword">is None</span>:
+                membership[node] = next_community
+                changed = <span class="keyword">True</span>
+
+        <span class="keyword">if not</span> changed:
+            <span class="keyword">break</span>
+
+    <span class="keyword">return</span> label_dict_to_partition(membership)</code></pre>
+        </article>
+      </div>
+
+      <div class="insight-strip">
+        <div class="insight"><span>Strength</span><strong>密度负反馈能保持社区多样性和指定数量</strong></div>
+        <div class="insight"><span>Trade-off</span><strong>必须预先给定 k，且要求输入图连通</strong></div>
+        <div class="insight"><span>Paper</span><strong><a class="paper-link" href="https://arxiv.org/abs/1703.09307" target="_blank" rel="noopener">Parés et al., 2017</a></strong></div>
+      </div>
+    </section>
+
+    <section class="algorithm-page" id="girvan" data-index="4">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Divisive Hierarchy</div>
+          <h1>Girvan–<br>Newman</h1>
+          <p class="hero-description">
+            社区之间的桥接边往往承担大量最短路径。Girvan-Newman 反复找到这些“交通要道”并将其删除，
+            让网络从整体逐层裂解成结构清晰的社区。
+          </p>
+        </div>
+        <div class="hero-index">
+          <span class="big-number">05</span>
+          <dl>
+            <dt>策略</dt><dd>自顶向下分裂</dd>
+            <dt>依据</dt><dd>边介数中心性</dd>
+            <dt>输出</dt><dd>层次化社区结构</dd>
+          </dl>
+        </div>
+      </div>
+
+      <div class="content-grid">
+        <div class="theory-column">
+          <article class="card">
+            <h2>桥边假设</h2>
+            <p>
+              社区内部通常存在许多可替代路径，而跨社区连接较少。因此跨社区边会出现在大量节点对的
+              最短路径上，具有较高边介数，删除后最容易让图产生新的连通分量。
+            </p>
+          </article>
+          <article class="card formula-card">
+            <h2>边介数中心性</h2>
+            <div class="formula">
+              \[
+              B(e)=\sum_{s\neq t}
+              \frac{\sigma_{st}(e)}{\sigma_{st}}
+              \]
+            </div>
+            <p>每删除一条边后都必须重新计算边介数，因为网络中的最短路径已经发生改变。</p>
+            <div class="formula-note">
+              <span>\(\sigma_{st}\)：\(s\) 到 \(t\) 的最短路径数</span>
+              <span>\(\sigma_{st}(e)\)：经过边 \(e\) 的最短路径数</span>
+              <span>\(B(e)\)：边 \(e\) 的桥接程度</span>
+              <span>\(Q\)：用于选择最佳分裂层次</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2>算法流程</h2>
+            <ol class="steps">
+              <li>计算图中所有边的边介数。</li>
+              <li>删除边介数最高的边。</li>
+              <li>重新计算介数，直到产生新的连通分量。</li>
+              <li>比较各分裂层的模块度并保留最佳划分。</li>
+            </ol>
+          </article>
+        </div>
+
+        <article class="code-card">
+          <div class="code-header">
+            <div class="window-dots"><i></i><i></i><i></i></div>
+            <span>girvan_newman.py · Brandes + 分裂</span>
+            <button class="copy-button" type="button">复制代码</button>
+          </div>
+          <pre><code><span class="keyword">def</span> <span class="function">edge_betweenness_centrality</span>(graph):
+    betweenness = defaultdict(float)
+
+    <span class="keyword">for</span> source <span class="keyword">in</span> graph.nodes():
+        stack = []
+        predecessors = {node: [] <span class="keyword">for</span> node <span class="keyword">in</span> graph.nodes()}
+        sigma = dict.fromkeys(graph.nodes(), 0.0)
+        sigma[source] = 1.0
+        distance = dict.fromkeys(graph.nodes(), -1)
+        distance[source] = 0
+
+        queue = deque([source])
+        <span class="keyword">while</span> queue:
+            vertex = queue.popleft()
+            stack.append(vertex)
+            <span class="keyword">for</span> neighbor <span class="keyword">in</span> graph.neighbors(vertex):
+                <span class="keyword">if</span> distance[neighbor] < 0:
+                    queue.append(neighbor)
+                    distance[neighbor] = distance[vertex] + 1
+                <span class="keyword">if</span> distance[neighbor] == distance[vertex] + 1:
+                    sigma[neighbor] += sigma[vertex]
+                    predecessors[neighbor].append(vertex)
+
+        dependency = dict.fromkeys(graph.nodes(), 0.0)
+        <span class="keyword">while</span> stack:
+            vertex = stack.pop()
+            coefficient = (1.0 + dependency[vertex]) / sigma[vertex]
+            <span class="keyword">for</span> predecessor <span class="keyword">in</span> predecessors[vertex]:
+                contribution = sigma[predecessor] * coefficient
+                edge = tuple(sorted((predecessor, vertex)))
+                betweenness[edge] += contribution
+                dependency[predecessor] += contribution
+
+    <span class="keyword">return</span> {edge: value / 2.0 <span class="keyword">for</span> edge, value <span class="keyword">in</span> betweenness.items()}
+
+
+<span class="keyword">def</span> <span class="function">girvan_newman_best</span>(graph, max_groups=16):
+    work_graph = graph.copy()
+    best_partition = [set(graph.nodes())]
+    best_score = modularity(graph, best_partition)
+
+    <span class="keyword">while</span> work_graph.number_of_edges() > 0:
+        before = nx.number_connected_components(work_graph)
+
+        <span class="keyword">while</span> nx.number_connected_components(work_graph) == before:
+            scores = edge_betweenness_centrality(work_graph)
+            edge = max(scores, key=scores.get)
+            work_graph.remove_edge(*edge)
+
+        partition = list(map(set, nx.connected_components(work_graph)))
+        <span class="keyword">if</span> len(partition) > max_groups:
+            <span class="keyword">break</span>
+
+        score = modularity(graph, partition)
+        <span class="keyword">if</span> score > best_score:
+            best_score, best_partition = score, partition
+
+    <span class="keyword">return</span> normalize_partition(best_partition)</code></pre>
+        </article>
+      </div>
+
+      <div class="insight-strip">
+        <div class="insight"><span>Strength</span><strong>分裂过程直观，并能生成完整的社区层次结构</strong></div>
+        <div class="insight"><span>Trade-off</span><strong>反复计算边介数，计算成本明显高于其他方法</strong></div>
+        <div class="insight"><span>Paper</span><strong><a class="paper-link" href="https://arxiv.org/abs/cond-mat/0112110" target="_blank" rel="noopener">Girvan &amp; Newman, 2002</a></strong></div>
+      </div>
+    </section>
+
+    <div class="page-controls">
+      <button class="page-button previous" id="previousButton" type="button" disabled>← 上一种算法</button>
+      <div class="keyboard-tip"><kbd>←</kbd><kbd>→</kbd> 键盘切换页面</div>
+      <button class="page-button next" id="nextButton" type="button">下一种算法 →</button>
+    </div>
+  </main>
+
+  <script>
+    const pageIds = ['greedy', 'louvain', 'label', 'fluid', 'girvan'];
+    const pages = [...document.querySelectorAll('.algorithm-page')];
+    const tabs = [...document.querySelectorAll('.nav-tab')];
+    const previousButton = document.getElementById('previousButton');
+    const nextButton = document.getElementById('nextButton');
+    const pageCount = document.getElementById('pageCount');
+    const meterFill = document.getElementById('meterFill');
+    let currentIndex = 0;
+
+    function showPage(index, updateHash = true) {
+      currentIndex = Math.max(0, Math.min(index, pages.length - 1));
+
+      pages.forEach((page, pageIndex) => {
+        page.classList.toggle('active', pageIndex === currentIndex);
+      });
+      tabs.forEach((tab, tabIndex) => {
+        const active = tabIndex === currentIndex;
+        tab.classList.toggle('active', active);
+        tab.setAttribute('aria-current', active ? 'page' : 'false');
+      });
+
+      previousButton.disabled = currentIndex === 0;
+      nextButton.disabled = currentIndex === pages.length - 1;
+      pageCount.textContent =
+        `${String(currentIndex + 1).padStart(2, '0')} / ${String(pages.length).padStart(2, '0')}`;
+      meterFill.style.width = `${((currentIndex + 1) / pages.length) * 100}%`;
+
+      if (updateHash) {
+        history.replaceState(null, '', `#${pageIds[currentIndex]}`);
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => showPage(index));
+    });
+
+    previousButton.addEventListener('click', () => showPage(currentIndex - 1));
+    nextButton.addEventListener('click', () => showPage(currentIndex + 1));
+
+    document.addEventListener('keydown', (event) => {
+      if (event.target.matches('button, a, input, textarea')) return;
+      if (event.key === 'ArrowLeft') showPage(currentIndex - 1);
+      if (event.key === 'ArrowRight') showPage(currentIndex + 1);
+    });
+
+    document.querySelectorAll('.copy-button').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const code = button.closest('.code-card').querySelector('code').innerText;
+        try {
+          await navigator.clipboard.writeText(code);
+          button.textContent = '已复制';
+          setTimeout(() => {
+            button.textContent = '复制代码';
+          }, 1400);
+        } catch {
+          button.textContent = '复制失败';
+        }
+      });
+    });
+
+    const initialPage = pageIds.indexOf(location.hash.slice(1));
+    showPage(initialPage >= 0 ? initialPage : 0, false);
+  </script>
+</body>
+</html>
