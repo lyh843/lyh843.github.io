@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="林子淇的图标导航页">
+    <meta name="theme-color" content="#0078D4">
+    <title>林子淇的图标导航</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .icon-page {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        body.icon-background {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .icon-intro {
+            margin: 18px auto 0;
+            max-width: 720px;
+            text-align: center;
+            color: #1f3553;
+            font-size: 1rem;
+        }
+
+        .icon-section {
+            padding: 18px 20px 20px;
+        }
+
+        .icon-section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .icon-count {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.65);
+            color: #1b4f84;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+            gap: 20px;
+        }
+
+        .icon-link {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            min-height: 108px;
+            padding: 16px 10px 14px;
+            margin-right: 0;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            border-radius: 18px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(8px);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+
+        .icon-link:hover,
+        .icon-link:focus-visible {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 28px rgba(0, 120, 212, 0.18);
+            border-color: rgba(0, 120, 212, 0.45);
+            outline: none;
+        }
+
+        .icon-link img {
+            width: 34px;
+            height: 34px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .icon-label {
+            max-width: 100%;
+            color: #1b4f84;
+            font-size: 0.82rem;
+            font-weight: 600;
+            line-height: 1.35;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .icon-link .fallback-mark {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            max-width: 100%;
+            min-height: 2.4rem;
+            padding: 0 6px;
+            color: #1b4f84;
+            font-size: 0.82rem;
+            font-weight: 600;
+            line-height: 1.35;
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        @media (max-width: 640px) {
+            .icon-intro {
+                margin-top: 12px;
+                font-size: 0.95rem;
+            }
+
+            .icon-section {
+                padding: 16px;
+            }
+
+            .icon-section-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .icon-grid {
+                grid-template-columns: repeat(auto-fill, minmax(86px, 1fr));
+                gap: 14px;
+            }
+
+            .icon-link {
+                min-height: 98px;
+                gap: 8px;
+                padding: 14px 8px 12px;
+                border-radius: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="icon-page">
+        <header>
+            <h1 class="title">林子淇的图标导航</h1>
+            <nav class="nav-links" aria-label="页面导航">
+                <a href="index.html">返回首页</a>
+                <a href="nju.html">南大站点</a>
+                <a href="tools.html">工具页</a>
+                <a href="todo.html">Todo</a>
+            </nav>
+        </header>
+
+        <main>
+            <div class="search-container">
+                <form method="get" class="search-form" role="search" aria-label="搜索引擎" target="_blank" id="search-form">
+                    <select id="engine-select" aria-label="选择搜索引擎">
+                        <option value="https://www.bing.com/search">Bing</option>
+                        <option value="https://www.google.com/search">Google</option>
+                        <option value="https://www.baidu.com/s">百度</option>
+                        <option value="https://duckduckgo.com/">DuckDuckGo</option>
+                    </select>
+                    <input type="text" name="q" autofocus placeholder="Search with Bing..." aria-label="搜索内容" autocomplete="off"
+                        id="search-input">
+                    <button type="submit">搜索</button>
+                </form>
+                <div class="search-suggestions" id="search-suggestions" role="listbox" aria-label="搜索建议"></div>
+            </div>
+
+            <div id="sections-root" aria-label="图标导航内容"></div>
+        </main>
+    </div>
+
+    <script>
+        (function () {
+            const backgrounds = ["background2.png", "background3.png"];
+            const selected = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+
+            document.body.classList.add("icon-background");
+            document.body.style.backgroundImage =
+                "linear-gradient(rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.2)), url('" + selected + "')";
+        })();
+    </script>
+    <script>
+        (function () {
+            const form = document.getElementById("search-form");
+            const select = document.getElementById("engine-select");
+            const input = document.getElementById("search-input");
+            const url = localStorage.getItem("searchEngine") || "https://www.bing.com/search";
+
+            select.value = url;
+            form.action = url;
+
+            select.addEventListener("change", function () {
+                form.action = this.value;
+                localStorage.setItem("searchEngine", this.value);
+            });
+
+            form.addEventListener("submit", function () {
+                input.name = form.action.includes("baidu.com") ? "wd" : "q";
+            });
+        })();
+    </script>
+    <script>
+        (function () {
+            const searchForm = document.getElementById("search-form");
+            const searchInput = document.getElementById("search-input");
+            const suggestionsContainer = document.getElementById("search-suggestions");
+            let suggestions = [];
+            let selectedIndex = -1;
+            let debounceTimer = null;
+
+            searchInput.addEventListener("input", function () {
+                const query = this.value.trim();
+                clearTimeout(debounceTimer);
+
+                if (!query) {
+                    hideSuggestions();
+                    return;
+                }
+
+                debounceTimer = setTimeout(function () {
+                    fetchSuggestions(query);
+                }, 20);
+            });
+
+            searchInput.addEventListener("keydown", function (event) {
+                if (event.key === "ArrowDown") {
+                    event.preventDefault();
+                    if (selectedIndex < suggestions.length - 1) {
+                        selectedIndex++;
+                        updateSelected();
+                    }
+                } else if (event.key === "ArrowUp") {
+                    event.preventDefault();
+                    if (selectedIndex > 0) {
+                        selectedIndex--;
+                        updateSelected();
+                    }
+                } else if (event.key === "Enter") {
+                    if (selectedIndex >= 0 && suggestions[selectedIndex]) {
+                        event.preventDefault();
+                        searchInput.value = suggestions[selectedIndex];
+                        searchForm.submit();
+                    }
+                } else if (event.key === "Escape") {
+                    hideSuggestions();
+                }
+            });
+
+            searchForm.addEventListener("submit", hideSuggestions);
+
+            document.addEventListener("click", function (event) {
+                if (!searchForm.contains(event.target)) {
+                    hideSuggestions();
+                }
+            });
+
+            function fetchSuggestions(query) {
+                const script = document.createElement("script");
+                const callbackName = "bingCallback_" + Date.now();
+
+                window[callbackName] = function (data) {
+                    suggestions = data[1] || [];
+                    displaySuggestions(suggestions);
+                    delete window[callbackName];
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                };
+
+                script.src = "https://www.bing.com/osjson.aspx?query=" + encodeURIComponent(query) +
+                    "&JsonType=callback&JsonCallback=" + callbackName;
+                script.onerror = function () {
+                    hideSuggestions();
+                    delete window[callbackName];
+                    if (script.parentNode) {
+                        script.parentNode.removeChild(script);
+                    }
+                };
+
+                document.body.appendChild(script);
+            }
+
+            function displaySuggestions(items) {
+                if (items.length === 0) {
+                    hideSuggestions();
+                    return;
+                }
+
+                suggestionsContainer.innerHTML = "";
+                selectedIndex = -1;
+
+                items.slice(0, 5).forEach(function (item) {
+                    const div = document.createElement("div");
+                    div.className = "suggestion-item";
+                    div.textContent = item;
+                    div.addEventListener("click", function () {
+                        searchInput.value = item;
+                        searchForm.submit();
+                    });
+                    suggestionsContainer.appendChild(div);
+                });
+
+                suggestionsContainer.classList.add("active");
+            }
+
+            function hideSuggestions() {
+                suggestionsContainer.classList.remove("active");
+                suggestions = [];
+                selectedIndex = -1;
+            }
+
+            function updateSelected() {
+                const items = suggestionsContainer.querySelectorAll(".suggestion-item");
+                items.forEach(function (item, index) {
+                    item.classList.toggle("selected", index === selectedIndex);
+                });
+            }
+        })();
+    </script>
+    <script>
+        (function () {
+            const sections = [
+                {
+                    title: "校园与教务",
+                    links: [
+                        ["table.nju.edu.cn", "https://table.nju.edu.cn/"],
+                        ["南大云盘", "https://box.nju.edu.cn/library/3b682f55-edd8-4cb7-b008-fea32e83d1e8/%E7%A7%81%E4%BA%BA%E8%B5%84%E6%96%99%E5%BA%93/"],
+                        ["办事服务大厅", "https://ehall.nju.edu.cn/ywtb-portal/official/index.html#/bksyx"],
+                        ["邮箱", "https://mail.smail.nju.edu.cn/"],
+                        ["教服平台", "https://jw.nju.edu.cn/main.htm"],
+                        ["校园网", "https://p.nju.edu.cn/portal/index.html?v=202303020702"],
+                        ["教务系统", "http://elite.nju.edu.cn/jiaowu/exit.do"],
+                        ["第二课堂", "https://youth.nju.edu.cn/tw/#/"],
+                        ["智汇南雍", "https://lms.nju.edu.cn/user/index#/"],
+                        ["图书馆", "https://lib.nju.edu.cn/"],
+                        ["信息门户", "https://itsc.nju.edu.cn/"],
+                        ["五育", "https://ndwy.nju.edu.cn/dztml/"],
+                        ["南大 SPOC", "https://study.nju.edu.cn/portal/myCourseIndex/1.mooc"],
+                        ["选课红黑榜", "https://table.nju.edu.cn/external-apps/7aded834-74a2-43cc-b515-fb8e01656ef2/?page_id=w0GG"]
+                    ]
+                },
+                {
+                    title: "搜索与 AI",
+                    links: [
+                        ["Bing", "https://cn.bing.com/"],
+                        ["ChatGPT", "https://chatgpt.com/"],
+                        ["Google", "https://www.google.com/"],
+                        ["玻尔", "https://bohrium.dp.tech/ai-search/home"],
+                        ["豆包", "https://www.doubao.com/chat/"],
+                        ["通义", "https://www.tongyi.com/"],
+                        ["DeepSeek", "https://chat.deepseek.com/"],
+                        ["Coze", "https://www.coze.cn/"],
+                        ["NotebookLM", "https://notebooklm.google.com/?icid=home_maincta&_gl=1*qr089l*_ga*MTg4Nzk2MTUxNy4xNzc4NDI5OTAz*_ga_W0LDH41ZCB*czE3NzkzNDYxNTQkbzQkZzAkdDE3NzkzNDYxNTQkajYwJGwwJGgw"],
+                        ["Canva", "https://www.canva.cn/image-generator/?utm_medium=paid&utm_source=bing&utm_campaign=ACQ-magic-tti&utm_term=aizuohua&utm_content=sem&msclkid=c6ac41dd94731e015b5226d5705dbc75"],
+                        ["百度", "https://www.baidu.com/"],
+                        ["360 搜索", "https://www.so.com/"],
+                        ["百度百科", "https://baike.baidu.com/"]
+                    ]
+                },
+                {
+                    title: "学术与科研",
+                    links: [
+                        ["谷歌学术", "https://scholar.google.com/"],
+                        ["知网", "https://kns.cnki.net/kns8s/"],
+                        ["社会学院", "https://sociology.nju.edu.cn/"],
+                        ["DOI", "https://www.doi.org/"],
+                        ["ScienceDirect", "https://www.sciencedirect.com/org/science/article/pii/S1438887125000111"],
+                        ["ResearchGate", "https://www.researchgate.net/"],
+                        ["Z-Library", "https://zh.z-library.sk/"],
+                        ["电子书网站", "https://zhuanlan.zhihu.com/p/689075673"],
+                        ["微信读书库", "https://www.wxbooks.com/"],
+                        ["恩京的书房", "https://www.enjing.net/"],
+                        ["心理学报", "https://journal.psych.ac.cn/xlxb/CN/0439-755X/home.shtml"],
+                        ["CUHK 图书馆", "https://www.lib.cuhk.edu.hk/tc/"],
+                        ["Scopus", "https://www.scopus.com/pages/home?display=basic#basic"],
+                        ["Kaggle", "https://www.kaggle.com/"],
+                        ["Connected Papers", "https://www.connectedpapers.com/"]
+                    ]
+                },
+                {
+                    title: "学习与办公",
+                    links: [
+                        ["实习僧", "https://www.shixiseng.com/"],
+                        ["Boss 直聘", "https://www.zhipin.com/guangzhou/?seoRefer=index"],
+                        ["腾讯文档", "https://docs.qq.com/desktop"],
+                        ["秀米", "https://xiumi.us/#/"],
+                        ["公众号后台", "https://mp.weixin.qq.com/cgi-bin/home?t=home/index&lang=zh_TW&token=1751307670"],
+                        ["学习通", "https://i.chaoxing.com/base?t=1729700428974"],
+                        ["慕课", "https://www.icourse163.org/home.htm?userId=1471008653#/home/course"],
+                        ["智慧树", "https://wenda.zhihuishu.com/stu/courseInfo/studyResource?courseId=10932091"],
+                        ["写吧", "http://xieba.pigai.org/2024/09/24/w01-reflective-journal-entry/"],
+                        ["腾讯文档模板", "https://lucid.app/documents#/templates"],
+                        ["个人主页", "https://lyh843.github.io/"],
+                        ["个人博客", "http://4.189.252.43/"]
+                    ]
+                },
+                {
+                    title: "设计与资源",
+                    links: [
+                        ["Pinterest", "https://jp.pinterest.com/"],
+                        ["Apple", "https://www.apple.com/"],
+                        ["iCloud", "https://www.icloud.com/"],
+                        ["UX Planet", "https://uxplanet.org/"],
+                        ["CNSDA", "https://www.cnsda.org/index.php"],
+                        ["YouTube 下载", "https://youtube.iiilab.com/"],
+                        ["京东图书", "https://m-tob.jd.com/"],
+                        ["升降调", "https://twistedwave.com/online"],
+                        ["音声分离", "https://aivocalremover.com/"],
+                        ["粤语正音 PDF", "https://www.ilc.cuhk.edu.hk/workshop/Chinese/Cantonese/Romanization/inc/files/ProperCanPronunciation_20180503.pdf"],
+                        ["粤语教学", "https://corpus.eduhk.hk/cantonese/#"],
+                        ["diagrams.net", "https://app.diagrams.net/"],
+                        ["VPN 记录", "https://ygpy.net/vpn/2024/10.html#20241020"]
+                    ]
+                },
+                {
+                    title: "娱乐与日常",
+                    links: [
+                        ["YouTube", "https://www.youtube.com/"],
+                        ["CrazyGames", "https://www.crazygames.com/"],
+                        ["Poki", "https://poki.com/zh#utm_source=redirect-en-zh"],
+                        ["课程账号", "https://kckc1818.com/user/account.php?action=signin"],
+                        ["ACG 壁纸", "https://www.acgbibi.com/"],
+                        ["星座运势", "https://www.xzw.com/astrolabe/s-AALGFhLk8Wym_PA75XBX3Q8LzT95iW6ZRTD34vAVNqFHwiA5yRyTABXwbBi-EJX-Jtl9k5ffyKcf6zXfL3Xhqsm.html"],
+                        ["剧集", "https://www.mjwo.net/play/14030-1-1/"],
+                        ["微信读书", "https://weread.qq.com/"],
+                        ["Apple Music Replay", "https://replay.music.apple.com/"]
+                    ]
+                }
+            ];
+
+            const iconOverrides = {
+                "NotebookLM": [
+                    "https://ssl.gstatic.com/onebox/smartcompose/notebooklm/v1/favicon.ico",
+                    "https://www.gstatic.com/images/branding/product/1x/notebook_2023_64dp.png"
+                ]
+            };
+
+            const root = document.getElementById("sections-root");
+
+            sections.forEach(function (section) {
+                const sectionElement = document.createElement("section");
+                sectionElement.className = "link-section icon-section";
+                sectionElement.setAttribute("aria-label", section.title);
+
+                const header = document.createElement("div");
+                header.className = "icon-section-header";
+
+                const title = document.createElement("h2");
+                title.textContent = section.title;
+
+                const count = document.createElement("span");
+                count.className = "icon-count";
+                count.textContent = section.links.length + " 个入口";
+
+                header.appendChild(title);
+                header.appendChild(count);
+
+                const grid = document.createElement("div");
+                grid.className = "icon-grid";
+
+                section.links.forEach(function (item) {
+                    const name = item[0];
+                    const url = item[1];
+                    const link = document.createElement("a");
+                    const image = document.createElement("img");
+                    const hiddenText = document.createElement("span");
+                    const label = document.createElement("span");
+                    const fallback = document.createElement("span");
+
+                    link.className = "icon-link";
+                    link.href = url;
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
+                    link.title = name;
+                    link.setAttribute("aria-label", name);
+
+                    setIconSource(image, name, url, fallback);
+                    image.alt = "";
+                    image.loading = "lazy";
+
+                    fallback.className = "fallback-mark";
+                    fallback.textContent = name;
+
+                    label.className = "icon-label";
+                    label.textContent = name;
+
+                    hiddenText.className = "visually-hidden";
+                    hiddenText.textContent = name;
+
+                    link.appendChild(image);
+                    link.appendChild(fallback);
+                    link.appendChild(label);
+                    link.appendChild(hiddenText);
+                    grid.appendChild(link);
+                });
+
+                sectionElement.appendChild(header);
+                sectionElement.appendChild(grid);
+                root.appendChild(sectionElement);
+            });
+
+            function setIconSource(image, name, url, fallback) {
+                const candidates = (iconOverrides[name] || []).concat(
+                    "https://www.google.com/s2/favicons?sz=64&domain_url=" + encodeURIComponent(url)
+                );
+                let index = 0;
+
+                image.addEventListener("error", function handleError() {
+                    index += 1;
+                    if (index < candidates.length) {
+                        image.src = candidates[index];
+                        return;
+                    }
+
+                    image.hidden = true;
+                    fallback.style.display = "inline-flex";
+                });
+
+                image.src = candidates[index];
+            }
+
+        })();
+    </script>
+</body>
+
+</html>
